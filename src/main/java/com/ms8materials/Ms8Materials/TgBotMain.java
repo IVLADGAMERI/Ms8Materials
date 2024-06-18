@@ -1,11 +1,10 @@
 package com.ms8materials.Ms8Materials;
 
-import com.ms8materials.Ms8Materials.config.BotConfig;
-import jakarta.servlet.http.HttpSession;
+import com.ms8materials.Ms8Materials.interaction.callbacks.CallbacksHandler;
+import com.ms8materials.Ms8Materials.interaction.commands.CommandsHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,37 +22,35 @@ public class TgBotMain extends TelegramLongPollingBot {
     String botName;
     @Value("${bot.token}")
     String botToken;
+    @Autowired
+    private CallbacksHandler callbacksHandler;
+    @Autowired
+    private CommandsHandler commandsHandler;
     private Map<Long, String> conversationContext = new HashMap<>();
     @Override
     public void onUpdateReceived(Update update) {
+        if (update.hasCallbackQuery()) {
+            log.info(update.getCallbackQuery().getData());
+        }
         if(update.hasMessage() && update.getMessage().hasText()){
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
-            switch (messageText){
-                case "/start":
-                    startBot(chatId, conversationContext);
-                    break;
-                case "/test":
-                    testBot(chatId, conversationContext);
-                    break;
-                default: log.info("Unexpected message");
+            SendMessage responseMessage;
+            if (messageText.startsWith("/")) {
+                responseMessage = commandsHandler.handle(update);
+            } else {
+                responseMessage = new SendMessage();
+                responseMessage.setChatId(chatId);
+                responseMessage.setText("Unknown command!");
+            }
+            try {
+                execute(responseMessage);
+            } catch (TelegramApiException e) {
+                log.error(e.getMessage());
             }
         }
     }
 
-    private void startBot(long chatId, Map<Long, String> conversationContext) {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText("Hello! I'm a Telegram bot.");
-
-        try {
-            execute(message);
-            conversationContext.put(chatId, "/start");
-            log.info(conversationContext.toString());
-        } catch (TelegramApiException e){
-            log.error(e.getMessage());
-        }
-    }
     private void testBot(long chatId, Map<Long, String> conversationContext) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
