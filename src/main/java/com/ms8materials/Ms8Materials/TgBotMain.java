@@ -1,13 +1,25 @@
 package com.ms8materials.Ms8Materials;
 
+import com.ms8materials.Ms8Materials.events.EditMessageEvent;
+import com.ms8materials.Ms8Materials.events.MessageSentEvent;
+import com.ms8materials.Ms8Materials.interaction.Response;
+import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbacksHandler;
 import com.ms8materials.Ms8Materials.interaction.commands.CommandsHandler;
+import com.ms8materials.Ms8Materials.interaction.commands.commandsHandlers.StartCommandHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -16,7 +28,8 @@ import java.util.Map;
 
 @Component("tgBotMain")
 @Slf4j
-public class TgBotMain extends TelegramLongPollingBot {
+public class TgBotMain extends TelegramLongPollingBot implements ApplicationEventPublisherAware {
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Value("${bot.name}")
     String botName;
@@ -26,45 +39,77 @@ public class TgBotMain extends TelegramLongPollingBot {
     private CallbacksHandler callbacksHandler;
     @Autowired
     private CommandsHandler commandsHandler;
+    @Autowired
+    private StartCommandHandler startCommandHandler;
     private Map<Long, String> conversationContext = new HashMap<>();
     @Override
     public void onUpdateReceived(Update update) {
+        long chatId;
+        Response response;
         if (update.hasCallbackQuery()) {
+            chatId = update.getCallbackQuery().getMessage().getChatId();
             log.info(update.getCallbackQuery().getData());
-        }
-        if(update.hasMessage() && update.getMessage().hasText()){
+            response = callbacksHandler.handle(update);
+            answerCallbackQuery(update.getCallbackQuery().getId());
+        } else if(update.hasMessage() && update.getMessage().hasText()){
+            chatId = update.getMessage().getChatId();
             String messageText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
-            SendMessage responseMessage;
-            if (messageText.startsWith("/")) {
-                responseMessage = commandsHandler.handle(update);
-            } else {
-                responseMessage = new SendMessage();
-                responseMessage.setChatId(chatId);
-                responseMessage.setText("Unknown command!");
-            }
-            try {
-                execute(responseMessage);
-            } catch (TelegramApiException e) {
-                log.error(e.getMessage());
-            }
+            response = commandsHandler.handle(update);
+        } else {
+            chatId = update.getMessage().getChatId();
+            response = new Response(new SendMessage(String.valueOf(chatId), "Error!"), ResponseType.MESSAGE, this);
         }
+        switch (response.getType()) {
+            case PHOTO:
+                sendResponse(response.getSendPhoto(), response.getSource());
+                break;
+            case MESSAGE:
+                sendResponse(response.getSendMessage(), response.getSource());
+                break;
+            case DOCUMENT:
+                sendResponse(response.getSendDocument(), response.getSource());
+                break;
+        }
+
     }
 
-    private void testBot(long chatId, Map<Long, String> conversationContext) {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText("This is a test.");
-
+    private void sendResponse(SendMessage response, Object source) {
         try {
-            execute(message);
-            conversationContext.put(chatId, "/test");
-            log.info(conversationContext.toString());
-        } catch (TelegramApiException e){
-            log.error(e.getMessage());
+            Message message = execute(response);
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message));
+        } catch (TelegramApiException | NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
+    private void sendResponse(SendDocument response, Object source) {
+        try {
+            Message message = execute(response);
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message));
+        } catch (TelegramApiException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendResponse(SendPhoto response, Object source) {
+        try {
+            Message message = execute(response);
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message));
+        } catch (TelegramApiException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void answerCallbackQuery(String callbackQueryId) {
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setCallbackQueryId(callbackQueryId);
+        answerCallbackQuery.setShowAlert(false);
+        try {
+            execute(answerCallbackQuery);
+        } catch (TelegramApiException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public String getBotUsername() {
         return botName;
@@ -72,5 +117,20 @@ public class TgBotMain extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return botToken;
+    }
+
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @EventListener
+    public void handleEditMessageEvent(EditMessageEvent event) {
+        try {
+            execute(event.getEditMessageText());
+        } catch (TelegramApiException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

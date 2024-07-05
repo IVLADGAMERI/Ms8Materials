@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.essentials;
+package com.ms8materials.Ms8Materials.interaction.callbacks;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +10,11 @@ public enum CallbackType {
     GET_SUBJECT_FILES_LIST("GET_SUBJECT_FILES_LIST"),
     GET_SUBJECT_PHOTOS_LIST("GET_SUBJECT_PHOTOS_LIST"),
     GET_SUBJECT_NOTES_LIST("GET_SUBJECT_NOTES_LIST"),
-    GET_SUBJECT_MATERIALS("GET_SUBJECT_MATERIALS"),
+    GET_SUBJECT_MATERIALS_LIST("GET_SUBJECT_MATERIALS_LIST"),
+    GET_SUBJECT_NOTE("GET_SUBJECT_NOTE"),
 
     GET_SUBJECT_FILE("GET_SUBJECT_FILE"),
-    GET_SUBJECT_PHOTO("GET_SUBJECT_PHOTO"),
-    GET_SUBJECT_NOTE("GET_SUBJECT_NOTE");
+    GET_SUBJECT_PHOTO("GET_SUBJECT_PHOTO");
+
     private final String name;
 }
