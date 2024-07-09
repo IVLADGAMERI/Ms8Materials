@@ -16,19 +16,23 @@ public class Response {
     private SendDocument sendDocument;
     private SendPhoto sendPhoto;
     private ResponseType type;
-    public Response (SendMessage sendMessage, ResponseType type, Object source) {
+    private Object payload;
+    public Response (SendMessage sendMessage, ResponseType type, Object source, Object payload) {
         this.sendMessage = sendMessage;
         this.type = type;
         this.source = source;
+        this.payload = payload;
     }
-    public Response (SendDocument sendDocument, ResponseType type, Object source) {
+    public Response (SendDocument sendDocument, ResponseType type, Object source, Object payload) {
         this.sendDocument = sendDocument;
         this.type = type;
         this.source = source;
+        this.payload = payload;
     }
-    public Response (SendPhoto sendPhoto, ResponseType type, Object source) {
+    public Response (SendPhoto sendPhoto, ResponseType type, Object source, Object payload) {
         this.sendPhoto = sendPhoto;
         this.type = type;
         this.source = source;
+        this.payload = payload;
     }
 }

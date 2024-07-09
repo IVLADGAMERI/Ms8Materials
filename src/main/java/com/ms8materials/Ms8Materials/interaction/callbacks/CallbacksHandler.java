@@ -62,7 +62,7 @@ public class CallbacksHandler {
         } catch (Exception e) {
             e.printStackTrace();
             return new Response(new SendMessage(String.valueOf(update.getCallbackQuery().getMessage().getChatId()),
-                    "Failed to handle callback"), ResponseType.MESSAGE, this);
+                    "Failed to handle callback"), ResponseType.MESSAGE, this, null);
         }
     }
 

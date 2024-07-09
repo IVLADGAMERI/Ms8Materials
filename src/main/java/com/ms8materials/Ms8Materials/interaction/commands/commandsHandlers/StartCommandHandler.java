@@ -17,6 +17,6 @@ public class StartCommandHandler implements CommandHandler {
         sendMessage.setChatId(chatId);
         sendMessage.setText(MessagesConstants.ANSWERS.START_COMMAND_MESSAGE.getValue());
         sendMessage.setReplyMarkup(KeyboardsFactory.mainMenuKeyboard);
-        return new Response(sendMessage, ResponseType.MESSAGE, this);
+        return new Response(sendMessage, ResponseType.MESSAGE, this, null);
     }
 }

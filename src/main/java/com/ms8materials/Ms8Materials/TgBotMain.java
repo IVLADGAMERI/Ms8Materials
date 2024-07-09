@@ -57,44 +57,46 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
             response = commandsHandler.handle(update);
         } else {
             chatId = update.getMessage().getChatId();
-            response = new Response(new SendMessage(String.valueOf(chatId), "Error!"), ResponseType.MESSAGE, this);
+            response = new Response(new SendMessage(String.valueOf(chatId), "Error!"),
+                    ResponseType.MESSAGE, this, null);
         }
         switch (response.getType()) {
             case PHOTO:
-                sendResponse(response.getSendPhoto(), response.getSource());
+                sendResponse(response.getSendPhoto(), response.getSource(), response.getPayload());
                 break;
             case MESSAGE:
-                sendResponse(response.getSendMessage(), response.getSource());
+                sendResponse(response.getSendMessage(), response.getSource(), response.getPayload());
                 break;
             case DOCUMENT:
-                sendResponse(response.getSendDocument(), response.getSource());
+                sendResponse(response.getSendDocument(), response.getSource(), response.getPayload());
                 break;
         }
 
     }
 
-    private void sendResponse(SendMessage response, Object source) {
+    private void sendResponse(SendMessage response, Object source, Object payload) {
         try {
+            log.info(response.toString());
             Message message = execute(response);
-            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message));
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message, payload));
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private void sendResponse(SendDocument response, Object source) {
+    private void sendResponse(SendDocument response, Object source, Object payload) {
         try {
             Message message = execute(response);
-            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message));
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message, payload));
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private void sendResponse(SendPhoto response, Object source) {
+    private void sendResponse(SendPhoto response, Object source, Object payload) {
         try {
             Message message = execute(response);
-            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message));
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message, payload));
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }

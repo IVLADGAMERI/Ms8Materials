@@ -17,14 +17,10 @@ public class CommandsHandler {
     private final Map<String, CommandHandler> commandsHandlers;
     public CommandsHandler(@Autowired StartCommandHandler startCommandHandler,
                            @Autowired FilesCommandHandler filesCommandHandler,
-                           @Autowired DashboardCommandHandler dashboardCommandHandler,
-                           @Autowired SubjectsCommandHandler subjectsCommandHandler,
                            @Autowired NotesCommandHandler notesCommandHandler) {
         this.commandsHandlers = Map.of(
                 "/start", startCommandHandler,
                     MessagesConstants.MAIN_KEYBOARD_BUTTONS.FILES.getValue(), filesCommandHandler,
-                    MessagesConstants.MAIN_KEYBOARD_BUTTONS.DASHBOARD.getValue(), dashboardCommandHandler,
-                    MessagesConstants.MAIN_KEYBOARD_BUTTONS.SUBJECTS.getValue(), subjectsCommandHandler,
                     MessagesConstants.MAIN_KEYBOARD_BUTTONS.NOTES.getValue(), notesCommandHandler
         );
     }
@@ -37,7 +33,7 @@ public class CommandsHandler {
             SendMessage responseMessage = new SendMessage();
             responseMessage.setChatId(update.getMessage().getChatId());
             responseMessage.setText("Выбери нужный пункт из меню.");
-            response = new Response(responseMessage, ResponseType.MESSAGE, this);
+            response = new Response(responseMessage, ResponseType.MESSAGE, this,  null);
         }
         return response;
     }

@@ -15,4 +15,7 @@ public class SubjectsService {
     public List<SubjectEntity> getAll() {
         return subjectsRepository.findAll();
     }
+    public List<SubjectEntity> findAllBySemesterEntityId(int semesterEntityId) {
+        return subjectsRepository.findAllBySemesterEntityId(semesterEntityId);
+    }
 }

@@ -20,7 +20,9 @@ public class MessagesConstants {
         SUBJECTS_SEMESTERS_HAT("Выбери семестр: \n"),
         WAIT("Обработка..."),
         SUBJECTS_LIST_HAT("Список предметов \nСеместр: "),
+        SUBJECTS_LIST_FOOTER("Выбери номер интересующего предмета:"),
         MARKER("\uD83D\uDD39"),
+        SUBJECT_MATERIALS_LIST_HAT("Список материалов\nПредмет: "),
         EMPTY_LIST("Список пуст!");
         private final String value;
     }

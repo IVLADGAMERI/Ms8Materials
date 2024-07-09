@@ -1,15 +1,60 @@
 package com.ms8materials.Ms8Materials.interaction.commands.commandsHandlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ms8materials.Ms8Materials.data.entities.SemesterEntity;
+import com.ms8materials.Ms8Materials.data.services.SemestersService;
+import com.ms8materials.Ms8Materials.essentials.InlineKeyboardButtonData;
+import com.ms8materials.Ms8Materials.essentials.KeyboardsFactory;
+import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.messages.SemesterIdCallbackData;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
+import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
+@Slf4j
 public class FilesCommandHandler implements CommandHandler{
+    @Autowired
+    private SemestersService semestersService;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public Response handle(Update update) {
-        return new Response(new SendMessage(String.valueOf(update.getMessage().getChatId()), "ABOBA"), ResponseType.MESSAGE, this);
+        String chatId = String.valueOf(update.getMessage().getChatId());
+        Response response = new Response();
+        response.setType(ResponseType.MESSAGE);
+        response.setSource(this);
+        List<SemesterEntity> semesterEntityList = semestersService.findAll();
+        try {
+            List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
+            for (SemesterEntity item : semesterEntityList) {
+                inlineKeyboardButtonDataList.add(new InlineKeyboardButtonData(
+                        String.valueOf(item.getNumber()),
+                        new CallbackData(
+                                CallbackType.GET_SUBJECTS_LIST.getName(),
+                                objectMapper.writeValueAsString(new SemesterIdCallbackData(item.getId())))
+                ));
+            }
+            InlineKeyboardMarkup inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(
+                    inlineKeyboardButtonDataList, 2);
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(chatId);
+            sendMessage.setText(MessagesConstants.ANSWERS.SUBJECTS_SEMESTERS_HAT.getValue());
+            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+            response.setSendMessage(sendMessage);
+        } catch (Exception e) {
+            response.setSendMessage(new SendMessage(chatId, "Failed!"));
+        }
+        return response;
     }
 }
