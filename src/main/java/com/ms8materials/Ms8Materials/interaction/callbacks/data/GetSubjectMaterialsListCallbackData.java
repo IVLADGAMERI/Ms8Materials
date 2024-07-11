@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.messages;
+package com.ms8materials.Ms8Materials.interaction.callbacks.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetSubjectMaterialsListCallbackData {
-    private int subjectId;
+    private int subId;
+    private int pg;
+    private int mId;
 }

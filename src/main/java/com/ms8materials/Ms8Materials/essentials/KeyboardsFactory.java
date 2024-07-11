@@ -2,11 +2,8 @@ package com.ms8materials.Ms8Materials.essentials;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -14,10 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Slf4j
 public class KeyboardsFactory {
     public static final InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
     public static final ReplyKeyboardMarkup mainMenuKeyboard = new ReplyKeyboardMarkup();
@@ -63,22 +60,27 @@ public class KeyboardsFactory {
             inlineButtonsMatrix.add(buttonsRow);
         }
         inlineKeyboardMarkup.setKeyboard(inlineButtonsMatrix);
+        log.info(inlineKeyboardMarkup.getKeyboard().toString());
         return inlineKeyboardMarkup;
     }
 
     public static InlineKeyboardMarkup generateInlineKeyboard(List<InlineKeyboardButtonData> buttonData, int colsNumber) throws JsonProcessingException {
         List<List<InlineKeyboardButtonData>> buttonDataMatrix = new ArrayList<>();
-        int rowsNumber = buttonData.size() / colsNumber;
+        int rowsNumber = Math.round((float) buttonData.size() / (float) colsNumber);
         int currentButtonDataIndex = 0;
         for (int i = 0; i < rowsNumber; i++) {
             List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
             for (int j = 0; j < colsNumber; j++, currentButtonDataIndex++) {
-                InlineKeyboardButtonData inlineKeyboardButtonData = buttonData.get(currentButtonDataIndex);
-                if (inlineKeyboardButtonData == null) break;
-                inlineKeyboardButtonDataList.add(inlineKeyboardButtonData);
+                try {
+                    InlineKeyboardButtonData inlineKeyboardButtonData = buttonData.get(currentButtonDataIndex);
+                    inlineKeyboardButtonDataList.add(inlineKeyboardButtonData);
+                } catch (Exception e) {
+                    break;
+                }
             }
             buttonDataMatrix.add(inlineKeyboardButtonDataList);
         }
+
         return generateInlineKeyboard(buttonDataMatrix);
     }
 

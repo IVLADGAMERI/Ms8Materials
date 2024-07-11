@@ -3,18 +3,27 @@ package com.ms8materials.Ms8Materials.interaction.callbacks;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 @AllArgsConstructor
 public enum CallbackType {
-    GET_SUBJECTS_LIST("GET_SUBJECTS_LIST"),
-    GET_SUBJECT_FILES_LIST("GET_SUBJECT_FILES_LIST"),
-    GET_SUBJECT_PHOTOS_LIST("GET_SUBJECT_PHOTOS_LIST"),
-    GET_SUBJECT_NOTES_LIST("GET_SUBJECT_NOTES_LIST"),
-    GET_SUBJECT_MATERIALS_LIST("GET_SUBJECT_MATERIALS_LIST"),
-    GET_SUBJECT_NOTE("GET_SUBJECT_NOTE"),
+    GET_SUBJECTS_LIST("SL"),
+    GET_SUBJECT_FILES_LIST("SFL"),
+    GET_SUBJECT_PHOTOS_LIST("SPL"),
+    GET_SUBJECT_NOTES_LIST("SNL"),
+    GET_SUBJECT_MATERIALS_LIST("SML"),
+    GET_SUBJECT_NOTE("SN"),
 
-    GET_SUBJECT_FILE("GET_SUBJECT_FILE"),
-    GET_SUBJECT_PHOTO("GET_SUBJECT_PHOTO");
+    GET_SUBJECT_FILE("SF"),
+    GET_SUBJECT_PHOTO("SP");
+
+    public static CallbackType getByName(String name) {
+        for (CallbackType item : CallbackType.values()) {
+            if (Objects.equals(item.getName(), name)) return item;
+        }
+        return null;
+    }
 
     private final String name;
 }

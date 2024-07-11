@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.callbacks;
+package com.ms8materials.Ms8Materials.interaction.callbacks.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

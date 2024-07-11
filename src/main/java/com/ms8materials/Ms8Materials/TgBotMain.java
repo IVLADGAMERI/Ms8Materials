@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -70,15 +71,27 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
             case DOCUMENT:
                 sendResponse(response.getSendDocument(), response.getSource(), response.getPayload());
                 break;
+            case EDIT:
+                sendResponse(response.getEditMessageText());
+                break;
         }
 
+    }
+
+    private void sendResponse(EditMessageText response) {
+        try {
+            log.info(response.toString());
+            execute(response);
+        } catch (TelegramApiException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendResponse(SendMessage response, Object source, Object payload) {
         try {
             log.info(response.toString());
             Message message = execute(response);
-            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message, payload));
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message.getMessageId(), message.getChatId(), payload));
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -87,7 +100,7 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
     private void sendResponse(SendDocument response, Object source, Object payload) {
         try {
             Message message = execute(response);
-            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message, payload));
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message.getMessageId(), message.getChatId(), payload));
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -96,7 +109,7 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
     private void sendResponse(SendPhoto response, Object source, Object payload) {
         try {
             Message message = execute(response);
-            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message, payload));
+            applicationEventPublisher.publishEvent(new MessageSentEvent(source, message.getMessageId(), message.getChatId(), payload));
         } catch (TelegramApiException | NullPointerException e) {
             e.printStackTrace();
         }

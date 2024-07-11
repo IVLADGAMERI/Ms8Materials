@@ -9,8 +9,10 @@ import com.ms8materials.Ms8Materials.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.GetSubjectMaterialsListCallbackData;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.SemesterIdCallbackData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -34,9 +36,9 @@ public class GetSubjectsListCallbackHandler implements CallbackHandler{
             List<SubjectEntity> subjectEntityList =
                     subjectsService.findAllBySemesterEntityId(semesterIdCallbackData.getSemesterId());
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(MessagesConstants.ANSWERS.SUBJECTS_LIST_HAT.getValue());
-            stringBuilder.append(semesterIdCallbackData.getSemesterId());
-            stringBuilder.append("\n");
+            stringBuilder.append(String.format(MessagesConstants.ANSWERS.SUBJECTS_LIST_HAT.getValue(),
+                    semesterIdCallbackData.getSemesterId()))
+                    .append("\n");
             if (subjectEntityList.isEmpty()) {
                 stringBuilder.append(MessagesConstants.ANSWERS.EMPTY_LIST.getValue());
                 return new Response(new SendMessage(String.valueOf(chatId),stringBuilder.toString()),
@@ -56,12 +58,14 @@ public class GetSubjectsListCallbackHandler implements CallbackHandler{
                                 String.valueOf(item.getId()),
                                 new CallbackData(
                                         CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
-                                        objectMapper.writeValueAsString(new GetSubjectMaterialsListCallbackData(item.getId()))))
+                                        objectMapper.writeValueAsString(new GetSubjectMaterialsListCallbackData(item.getId(),
+                                                0,
+                                                0))))
                 );
             }
             stringBuilder.append(MessagesConstants.ANSWERS.SUBJECTS_LIST_FOOTER.getValue());
             InlineKeyboardMarkup inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(
-                    inlineKeyboardButtonDataList, 1
+                    inlineKeyboardButtonDataList, 2
             );
             SendMessage sendMessage = new SendMessage();
             sendMessage.setText(stringBuilder.toString());

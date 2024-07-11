@@ -7,12 +7,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Data
 public class MessageSentEvent extends ApplicationEvent {
-    private Message message;
+    private int messageId;
+    private long chatId;
     private Object payload;
     private Object source;
-    public MessageSentEvent(Object source, Message message, Object payload) {
+    public MessageSentEvent(Object source, int messageId, long chatId, Object payload) {
         super(source);
-        this.message = message;
+        this.messageId = messageId;
+        this.chatId = chatId;
         this.source = source;
         this.payload = payload;
     }

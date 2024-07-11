@@ -1,23 +1,18 @@
 package com.ms8materials.Ms8Materials.interaction.callbacks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms8materials.Ms8Materials.TgBotMain;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.CallbackHandler;
 import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.documents.GetSubjectFileCallbackHandler;
 import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.messages.*;
 import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.photos.GetSubjectPhotoCallbackHandler;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Map;
 
@@ -54,7 +49,7 @@ public class CallbacksHandler {
             log.info(callbackData.toString());
             String callbackTypeString = callbackData.getType();
             CallbackHandler callbackHandler =
-                    callbackHandlers.get(CallbackType.valueOf(callbackTypeString));
+                    callbackHandlers.get(CallbackType.getByName(callbackTypeString));
             if (callbackHandler == null) {
                 throw new RuntimeException("Callback handler with type " + callbackTypeString + " is not found!");
             }
