@@ -1,8 +1,6 @@
 package com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.messages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
-import com.ms8materials.Ms8Materials.data.entities.SubjectEntity;
 import com.ms8materials.Ms8Materials.data.services.SubjectsDataService;
 import com.ms8materials.Ms8Materials.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.essentials.KeyboardsFactory;
@@ -13,7 +11,7 @@ import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.GetSubjectMaterialsListCallbackData;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndMessageIdCallbackData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,10 +22,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.CallbackHandler;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -41,8 +36,8 @@ public class GetSubjectMaterialsListCallbackHandler implements CallbackHandler, 
     @Override
     public Response handle(CallbackData callbackData, long chatId) {
         try {
-            GetSubjectMaterialsListCallbackData getSubjectMaterialsListCallbackData = objectMapper.readValue(
-                    callbackData.getData(), GetSubjectMaterialsListCallbackData.class
+            SubjectIdAndMessageIdCallbackData getSubjectMaterialsListCallbackData = objectMapper.readValue(
+                    callbackData.getData(), SubjectIdAndMessageIdCallbackData.class
             );
             if (getSubjectMaterialsListCallbackData.getMId() == 0) {
                 return new Response(new SendMessage(String.valueOf(chatId), MessagesConstants.ANSWERS.WAIT.getValue()),
@@ -50,10 +45,8 @@ public class GetSubjectMaterialsListCallbackHandler implements CallbackHandler, 
                         this, callbackData);
 
             } else {
-                applicationEventPublisher.publishEvent(
-                        new MessageSentEvent(this, getSubjectMaterialsListCallbackData.getMId(), chatId, callbackData)
-                );
-                return null;
+                EditMessageText editMessageText = editMessage(getSubjectMaterialsListCallbackData.getMId(), chatId, callbackData);
+                return new Response(editMessageText, ResponseType.EDIT, this, callbackData);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,116 +54,136 @@ public class GetSubjectMaterialsListCallbackHandler implements CallbackHandler, 
                     ResponseType.MESSAGE,
                     this, callbackData);
         }
+    }
 
+    private EditMessageText editMessage(int messageId, long chatId, Object payload) {
+        StringBuilder stringBuilder = new StringBuilder();
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setMessageId(messageId);
+        editMessageText.setChatId(chatId);
+        try {
+            CallbackData castedPayload = (CallbackData) payload;
+            SubjectIdAndMessageIdCallbackData callbackData = objectMapper.readValue(castedPayload.getData(),
+                    SubjectIdAndMessageIdCallbackData.class);
+            List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = List.of(
+                    new InlineKeyboardButtonData(
+                            MessagesConstants.INLINE_BUTTONS_TEXT.FILES.getValue(),
+                            new CallbackData(
+                                    CallbackType.GET_SUBJECT_FILES_LIST.getName(),
+                                    objectMapper.writeValueAsString(callbackData)
+                            )
+                    ),
+                    new InlineKeyboardButtonData(
+                            MessagesConstants.INLINE_BUTTONS_TEXT.PHOTOS.getValue(),
+                            new CallbackData(
+                                    CallbackType.GET_SUBJECT_PHOTOS_LIST.getName(),
+                                    objectMapper.writeValueAsString(callbackData)
+                            )
+                    )
+            );
+            InlineKeyboardMarkup inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(
+                    inlineKeyboardButtonDataList,
+                    2);
+            stringBuilder.append(MessagesConstants.ANSWERS.SUBJECT_MATERIALS_LIST_HAT.getValue());
+            editMessageText.setText(stringBuilder.toString());
+            editMessageText.setReplyMarkup(inlineKeyboardMarkup);
+//            int subjectId = callbackData.getSubId();
+//            int pageIndex = callbackData.getPg();
+//            List<SubjectDataEntity> subjectDataEntityList =
+//                    subjectsDataService.findAllBySubjectId(subjectId,
+//                            pageIndex, 10);
+//            InlineKeyboardMarkup inlineKeyboardMarkup;
+//            List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
+//            int inlineKeyboardButtonDataListIndex = 0;
+//            if (subjectDataEntityList.isEmpty()) {
+//                stringBuilder.append("Нет данных.");
+//                if (pageIndex - 1 >= 0) {
+//                    inlineKeyboardButtonDataList.add(
+//                            inlineKeyboardButtonDataListIndex,
+//                            new InlineKeyboardButtonData(
+//                                    MessagesConstants.ANSWERS.PREVIOUS_PAGE.getValue(),
+//                                    new CallbackData(
+//                                            CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
+//                                            objectMapper.writeValueAsString(
+//                                                    new GetSubjectMaterialsListCallbackData(
+//                                                            subjectId,
+//                                                            pageIndex - 1,
+//                                                            messageId)
+//                                            )
+//                                    )
+//                            )
+//                    );
+//                    inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(inlineKeyboardButtonDataList, 1);
+//                    editMessageText.setReplyMarkup(inlineKeyboardMarkup);
+//                }
+//            } else {
+//                SubjectDataEntity firstSubjectDataEntity = subjectDataEntityList.getFirst();
+//                SubjectEntity subjectEntity = firstSubjectDataEntity.getSubject();
+//                stringBuilder.append(String.format(MessagesConstants.ANSWERS.SUBJECT_MATERIALS_LIST_HAT.getValue(),
+//                                subjectEntity.getName(), pageIndex + 1))
+//                        .append("\n");
+//                if (pageIndex - 1 >= 0) {
+//                    inlineKeyboardButtonDataList.add(
+//                            inlineKeyboardButtonDataListIndex,
+//                            new InlineKeyboardButtonData(
+//                                    MessagesConstants.ANSWERS.PREVIOUS_PAGE.getValue(),
+//                                    new CallbackData(
+//                                            CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
+//                                            objectMapper.writeValueAsString(
+//                                                    new GetSubjectMaterialsListCallbackData(
+//                                                            subjectId,
+//                                                            pageIndex - 1,
+//                                                            messageId)
+//                                            )
+//                                    )
+//                            )
+//                    );
+//                    inlineKeyboardButtonDataListIndex += 1;
+//                }
+//                inlineKeyboardButtonDataList.add(
+//                        inlineKeyboardButtonDataListIndex,
+//                        new InlineKeyboardButtonData(
+//                                MessagesConstants.ANSWERS.NEXT_PAGE.getValue(),
+//                                new CallbackData(
+//                                        CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
+//                                        objectMapper.writeValueAsString(
+//                                                new GetSubjectMaterialsListCallbackData(
+//                                                        subjectId,
+//                                                        pageIndex + 1,
+//                                                        messageId)
+//                                        )
+//                                )
+//                        )
+//                );
+//                inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(
+//                        inlineKeyboardButtonDataList, inlineKeyboardButtonDataList.size()
+//                );
+//                log.info(inlineKeyboardMarkup.toString());
+//                for (SubjectDataEntity item : subjectDataEntityList) {
+//                    stringBuilder.append(item.getId())
+//                            .append(") ")
+//                            .append(item.getName())
+//                            .append("\n")
+//                            .append(item.getType())
+//                            .append("\n");
+//                }
+//                editMessageText.setReplyMarkup(inlineKeyboardMarkup);
+//            }
+//            editMessageText.setText(stringBuilder.toString());
+        } catch (Exception e) {
+            editMessageText.setText("Failed!\nException: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return editMessageText;
     }
 
     @EventListener
     public void handleMessageSentEvent(MessageSentEvent event) {
         if (event.getSource() == this) {
-            StringBuilder stringBuilder = new StringBuilder();
-            int messageId = event.getMessageId();
-            long chatId = event.getChatId();
-            EditMessageText editMessageText = new EditMessageText();
-            editMessageText.setMessageId(messageId);
-            editMessageText.setChatId(chatId);
-            try {
-                CallbackData payload = (CallbackData) event.getPayload();
-                GetSubjectMaterialsListCallbackData callbackData = objectMapper.readValue(payload.getData(),
-                        GetSubjectMaterialsListCallbackData.class);
-                int subjectId = callbackData.getSubId();
-                int pageIndex = callbackData.getPg();
-                List<SubjectDataEntity> subjectDataEntityList =
-                        subjectsDataService.findAllBySubjectId(subjectId,
-                                pageIndex, 10);
-                InlineKeyboardMarkup inlineKeyboardMarkup;
-                List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
-                int inlineKeyboardButtonDataListIndex = 0;
-                if (subjectDataEntityList.isEmpty()) {
-                    stringBuilder.append("Нет данных.");
-                    if (pageIndex - 1 >= 0) {
-                        inlineKeyboardButtonDataList.add(
-                                inlineKeyboardButtonDataListIndex,
-                                new InlineKeyboardButtonData(
-                                        MessagesConstants.ANSWERS.PREVIOUS_PAGE.getValue(),
-                                        new CallbackData(
-                                                CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
-                                                objectMapper.writeValueAsString(
-                                                        new GetSubjectMaterialsListCallbackData(
-                                                                subjectId,
-                                                                pageIndex - 1,
-                                                                messageId)
-                                                )
-                                        )
-                                )
-                        );
-                        inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(inlineKeyboardButtonDataList, 1);
-                        editMessageText.setReplyMarkup(inlineKeyboardMarkup);
-                    }
-                } else {
-                    SubjectDataEntity firstSubjectDataEntity = subjectDataEntityList.getFirst();
-                    SubjectEntity subjectEntity = firstSubjectDataEntity.getSubject();
-                    stringBuilder.append(String.format(MessagesConstants.ANSWERS.SUBJECT_MATERIALS_LIST_HAT.getValue(),
-                                    subjectEntity.getName(), pageIndex + 1))
-                            .append("\n");
-                    if (pageIndex - 1 >= 0) {
-                        inlineKeyboardButtonDataList.add(
-                                inlineKeyboardButtonDataListIndex,
-                                new InlineKeyboardButtonData(
-                                        MessagesConstants.ANSWERS.PREVIOUS_PAGE.getValue(),
-                                        new CallbackData(
-                                                CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
-                                                objectMapper.writeValueAsString(
-                                                        new GetSubjectMaterialsListCallbackData(
-                                                                subjectId,
-                                                                pageIndex - 1,
-                                                                messageId)
-                                                )
-                                        )
-                                )
-                        );
-                        inlineKeyboardButtonDataListIndex += 1;
-                    }
-                    inlineKeyboardButtonDataList.add(
-                            inlineKeyboardButtonDataListIndex,
-                            new InlineKeyboardButtonData(
-                                    MessagesConstants.ANSWERS.NEXT_PAGE.getValue(),
-                                    new CallbackData(
-                                            CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
-                                            objectMapper.writeValueAsString(
-                                                    new GetSubjectMaterialsListCallbackData(
-                                                            subjectId,
-                                                            pageIndex + 1,
-                                                            messageId)
-                                            )
-                                    )
-                            )
-                    );
-                    inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(
-                            inlineKeyboardButtonDataList, inlineKeyboardButtonDataList.size()
-                    );
-                    log.info(inlineKeyboardMarkup.toString());
-                    for (SubjectDataEntity item : subjectDataEntityList) {
-                        stringBuilder.append(item.getId())
-                                .append(") ")
-                                .append(item.getName())
-                                .append("\n")
-                                .append(item.getType())
-                                .append("\n");
-                    }
-                    editMessageText.setReplyMarkup(inlineKeyboardMarkup);
-                }
-                editMessageText.setText(stringBuilder.toString());
-                applicationEventPublisher.publishEvent(new EditMessageEvent(
-                        this, editMessageText
-                ));
-            } catch (Exception e) {
-                editMessageText.setText("Failed!\nException: " + e.getMessage());
-                e.printStackTrace();
-                applicationEventPublisher.publishEvent(new EditMessageEvent(
-                        this, editMessageText
-                ));
-            }
-
+            EditMessageText editMessageText = editMessage(event.getMessageId(), event.getChatId(), event.getPayload());
+            applicationEventPublisher.publishEvent(new EditMessageEvent(
+                    this, editMessageText
+            ));
         }
     }
 

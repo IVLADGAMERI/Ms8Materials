@@ -7,7 +7,7 @@ public class MessagesConstants {
     @Getter
     @AllArgsConstructor
     public enum MAIN_KEYBOARD_BUTTONS {
-        FILES("\uD83D\uDCBE Файлы"), DASHBOARD("\uD83D\uDDD3 Расписание"),
+        FILES("\uD83D\uDCDA Материалы"), DASHBOARD("\uD83D\uDDD3 Расписание"),
         SUBJECTS("\uD83D\uDCDA Предметы"), NOTES("\uD83D\uDCCB Заметки");
         private final String value;
     }
@@ -22,10 +22,17 @@ public class MessagesConstants {
         SUBJECTS_LIST_HAT("Список предметов \nСеместр: %s"),
         SUBJECTS_LIST_FOOTER("Выбери номер интересующего предмета:"),
         MARKER("\uD83D\uDD39"),
-        SUBJECT_MATERIALS_LIST_HAT("Список материалов\nПредмет: %s\nСтраница: %s"),
+        SUBJECT_MATERIALS_LIST_HAT("Выбери тип:"),
+        EMPTY_LIST("Список пуст!");
+        private final String value;
+    }
+    @Getter
+    @AllArgsConstructor
+    public enum INLINE_BUTTONS_TEXT {
         PREVIOUS_PAGE("⬅ Назад"),
         NEXT_PAGE("Вперед ➡"),
-        EMPTY_LIST("Список пуст!");
+        FILES("\uD83D\uDCBE Файлы"),
+        PHOTOS("\uD83D\uDCF7 Фото");
         private final String value;
     }
 }

@@ -11,8 +11,8 @@ import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.GetSubjectMaterialsListCallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.SemesterIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndMessageIdCallbackData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -58,8 +58,7 @@ public class GetSubjectsListCallbackHandler implements CallbackHandler{
                                 String.valueOf(item.getId()),
                                 new CallbackData(
                                         CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
-                                        objectMapper.writeValueAsString(new GetSubjectMaterialsListCallbackData(item.getId(),
-                                                0,
+                                        objectMapper.writeValueAsString(new SubjectIdAndMessageIdCallbackData(item.getId(),
                                                 0))))
                 );
             }

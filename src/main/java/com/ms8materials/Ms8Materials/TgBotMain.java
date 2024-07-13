@@ -46,8 +46,10 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
     @Override
     public void onUpdateReceived(Update update) {
         long chatId;
+        int messageId = 0;
         Response response;
         if (update.hasCallbackQuery()) {
+            messageId = update.getCallbackQuery().getMessage().getMessageId();
             chatId = update.getCallbackQuery().getMessage().getChatId();
             log.info(update.getCallbackQuery().getData());
             response = callbacksHandler.handle(update);
@@ -75,7 +77,6 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
                 sendResponse(response.getEditMessageText());
                 break;
         }
-
     }
 
     private void sendResponse(EditMessageText response) {

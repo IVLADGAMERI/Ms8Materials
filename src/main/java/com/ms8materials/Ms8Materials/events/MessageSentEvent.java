@@ -1,7 +1,9 @@
 package com.ms8materials.Ms8Materials.events;
 
 import com.ms8materials.Ms8Materials.interaction.Response;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.context.ApplicationEvent;
 import org.telegram.telegrambots.meta.api.objects.Message;
 

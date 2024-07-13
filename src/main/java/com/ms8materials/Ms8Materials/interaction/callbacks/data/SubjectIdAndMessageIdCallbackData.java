@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetSubjectMaterialsListCallbackData {
+public class SubjectIdAndMessageIdCallbackData {
     private int subId;
-    private int pg;
     private int mId;
 }
