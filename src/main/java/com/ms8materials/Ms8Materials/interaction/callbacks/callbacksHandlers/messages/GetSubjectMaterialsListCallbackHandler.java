@@ -7,56 +7,27 @@ import com.ms8materials.Ms8Materials.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.events.EditMessageEvent;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
-import com.ms8materials.Ms8Materials.interaction.Response;
-import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
+import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.EditingCallbackHandlerImpl;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndMessageIdCallbackData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.CallbackHandler;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.List;
 
 @Component
 @Slf4j
-public class GetSubjectMaterialsListCallbackHandler implements CallbackHandler, ApplicationEventPublisherAware {
+public class GetSubjectMaterialsListCallbackHandler extends EditingCallbackHandlerImpl {
     @Autowired
     private SubjectsDataService subjectsDataService;
-    private ApplicationEventPublisher applicationEventPublisher;
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
-    public Response handle(CallbackData callbackData, long chatId) {
-        try {
-            SubjectIdAndMessageIdCallbackData getSubjectMaterialsListCallbackData = objectMapper.readValue(
-                    callbackData.getData(), SubjectIdAndMessageIdCallbackData.class
-            );
-            if (getSubjectMaterialsListCallbackData.getMId() == 0) {
-                return new Response(new SendMessage(String.valueOf(chatId), MessagesConstants.ANSWERS.WAIT.getValue()),
-                        ResponseType.MESSAGE,
-                        this, callbackData);
-
-            } else {
-                EditMessageText editMessageText = editMessage(getSubjectMaterialsListCallbackData.getMId(), chatId, callbackData);
-                return new Response(editMessageText, ResponseType.EDIT, this, callbackData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Response(new SendMessage(String.valueOf(chatId), e.getMessage()),
-                    ResponseType.MESSAGE,
-                    this, callbackData);
-        }
-    }
-
-    private EditMessageText editMessage(int messageId, long chatId, Object payload) {
+    public EditMessageText editMessage(int messageId, long chatId, Object payload) {
         StringBuilder stringBuilder = new StringBuilder();
         EditMessageText editMessageText = new EditMessageText();
         editMessageText.setMessageId(messageId);
@@ -177,7 +148,7 @@ public class GetSubjectMaterialsListCallbackHandler implements CallbackHandler, 
         return editMessageText;
     }
 
-    @EventListener
+    @Override
     public void handleMessageSentEvent(MessageSentEvent event) {
         if (event.getSource() == this) {
             EditMessageText editMessageText = editMessage(event.getMessageId(), event.getChatId(), event.getPayload());
@@ -185,10 +156,5 @@ public class GetSubjectMaterialsListCallbackHandler implements CallbackHandler, 
                     this, editMessageText
             ));
         }
-    }
-
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
