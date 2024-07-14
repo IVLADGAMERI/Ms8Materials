@@ -2,6 +2,7 @@ package com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.events.EditMessageEvent;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
@@ -44,7 +45,14 @@ public class EditingCallbackHandlerImpl implements EditingCallbackHandler, Appli
     }
 
     @Override
-    public void handleMessageSentEvent(MessageSentEvent event) {}
+    public void handleMessageSentEvent(MessageSentEvent event) {
+        if (event.getSource() == this) {
+            EditMessageText editMessageText = editMessage(event.getMessageId(), event.getChatId(), event.getPayload());
+            applicationEventPublisher.publishEvent(new EditMessageEvent(
+                    this, editMessageText
+            ));
+        }
+    }
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
