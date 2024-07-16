@@ -1,12 +1,13 @@
 package com.ms8materials.Ms8Materials.interaction.callbacks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ms8materials.Ms8Materials.interaction.Handler;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.CallbackHandler;
-import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.documents.GetSubjectFileCallbackHandler;
-import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.messages.*;
-import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.photos.GetSubjectPhotoCallbackHandler;
+import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.CallbackHandler;
+import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.documents.GetSubjectFileCallbackHandler;
+import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.messages.*;
+import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.photos.GetSubjectPhotoCallbackHandler;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class CallbacksHandler {
+public class CallbacksHandler implements Handler {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private Map<CallbackType, CallbackHandler> callbackHandlers;
 
@@ -43,7 +44,7 @@ public class CallbacksHandler {
     }
 
 
-    public Response handle(Update update) {
+    public Response handle(Update update, Object payload) {
         try {
             CallbackData callbackData = objectMapper.readValue(update.getCallbackQuery().getData(), CallbackData.class);
             log.info(callbackData.toString());
@@ -57,7 +58,7 @@ public class CallbacksHandler {
         } catch (Exception e) {
             e.printStackTrace();
             return new Response(new SendMessage(String.valueOf(update.getCallbackQuery().getMessage().getChatId()),
-                    "Failed to handle callback"), ResponseType.MESSAGE, this, null);
+                    "Failed to handle callback"), ResponseType.MESSAGE, this, null, null);
         }
     }
 

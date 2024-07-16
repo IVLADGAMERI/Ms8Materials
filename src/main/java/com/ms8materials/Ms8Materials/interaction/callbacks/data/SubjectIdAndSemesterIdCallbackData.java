@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectIdAndMessageIdCallbackData {
+public class SubjectIdAndSemesterIdCallbackData {
     private int subId;
-    private int mId;
+    private int semId;
 }

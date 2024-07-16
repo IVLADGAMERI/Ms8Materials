@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.commands.commandsHandlers;
+package com.ms8materials.Ms8Materials.interaction.commands.handlers;
 
 import com.ms8materials.Ms8Materials.interaction.Response;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers;
+package com.ms8materials.Ms8Materials.interaction.callbacks.handlers;
 
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;

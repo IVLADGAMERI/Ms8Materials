@@ -15,10 +15,13 @@ import java.util.List;
 public class SubjectsDataService {
     @Autowired
     private SubjectDataRepository subjectDataRepository;
-
-    public List<SubjectDataEntity> findAllBySubjectId(int subjectId, int pageNumber, int pageSize) {
-        Page<SubjectDataEntity> subjectDataEntityPage = subjectDataRepository.findAllBySubjectId(subjectId,
+    public Page<SubjectDataEntity> findAllBySubjectIdAndType(int subjectId, String type, int pageNumber, int pageSize) {
+        return subjectDataRepository.findAllBySubjectIdAndType(subjectId,
+                type,
                 PageRequest.of(pageNumber, pageSize));
-        return subjectDataEntityPage.get().toList();
     }
+    public List<SubjectDataEntity> findAllByIds(List<Integer> ids) {
+        return subjectDataRepository.findAllById(ids);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.commands.commandsHandlers;
+package com.ms8materials.Ms8Materials.interaction.commands.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms8materials.Ms8Materials.data.entities.SemesterEntity;
@@ -23,7 +23,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class FilesCommandHandler implements CommandHandler{
+public class MaterialsCommandHandler implements CommandHandler{
     @Autowired
     private SemestersService semestersService;
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -42,7 +42,10 @@ public class FilesCommandHandler implements CommandHandler{
                         String.valueOf(item.getNumber()),
                         new CallbackData(
                                 CallbackType.GET_SUBJECTS_LIST.getName(),
-                                objectMapper.writeValueAsString(new SemesterIdCallbackData(item.getId())))
+                                objectMapper.writeValueAsString(new SemesterIdCallbackData(item.getId())
+                                ),
+                                0
+                        )
                 ));
             }
             InlineKeyboardMarkup inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(

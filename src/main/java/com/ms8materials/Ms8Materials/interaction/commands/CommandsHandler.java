@@ -1,22 +1,22 @@
 package com.ms8materials.Ms8Materials.interaction.commands;
 
 import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.interaction.Handler;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.commands.commandsHandlers.*;
+import com.ms8materials.Ms8Materials.interaction.commands.handlers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Map;
 
 @Component
-public class CommandsHandler {
+public class CommandsHandler implements Handler {
     private final Map<String, CommandHandler> commandsHandlers;
     public CommandsHandler(@Autowired StartCommandHandler startCommandHandler,
-                           @Autowired FilesCommandHandler filesCommandHandler,
+                           @Autowired MaterialsCommandHandler filesCommandHandler,
                            @Autowired NotesCommandHandler notesCommandHandler) {
         this.commandsHandlers = Map.of(
                 "/start", startCommandHandler,
@@ -24,7 +24,7 @@ public class CommandsHandler {
                     MessagesConstants.MAIN_KEYBOARD_BUTTONS.NOTES.getValue(), notesCommandHandler
         );
     }
-    public Response handle(Update update) {
+    public Response handle(Update update, Object payload) {
         Response response;
         CommandHandler commandHandler = commandsHandlers.get(update.getMessage().getText());
         if (commandHandler != null) {
@@ -33,7 +33,7 @@ public class CommandsHandler {
             SendMessage responseMessage = new SendMessage();
             responseMessage.setChatId(update.getMessage().getChatId());
             responseMessage.setText("Выбери нужный пункт из меню.");
-            response = new Response(responseMessage, ResponseType.MESSAGE, this,  null);
+            response = new Response(responseMessage, ResponseType.MESSAGE, this,  null, null);
         }
         return response;
     }

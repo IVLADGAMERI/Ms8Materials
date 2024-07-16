@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.messages;
+package com.ms8materials.Ms8Materials.interaction.callbacks.handlers.messages;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,43 +8,46 @@ import com.ms8materials.Ms8Materials.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
-import com.ms8materials.Ms8Materials.interaction.ResponseType;
+import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.EventBasedEditingCallbackHandlerImpl;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
 import com.ms8materials.Ms8Materials.interaction.callbacks.data.SemesterIdCallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndMessageIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndSemesterIdCallbackData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import com.ms8materials.Ms8Materials.interaction.callbacks.callbacksHandlers.CallbackHandler;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class GetSubjectsListCallbackHandler implements CallbackHandler{
+public class GetSubjectsListCallbackHandler extends EventBasedEditingCallbackHandlerImpl {
     @Autowired
     private SubjectsService subjectsService;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     @Override
-    public Response handle(CallbackData callbackData, long chatId) {
+    public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) {
+        EditMessageText editMessageText = new EditMessageText();
         try {
+            CallbackData callbackData = (CallbackData) payload;
             SemesterIdCallbackData semesterIdCallbackData = objectMapper.readValue(callbackData.getData(),
                     SemesterIdCallbackData.class);
+            editMessageText.setMessageId(messageId);
+            editMessageText.setChatId(chatId);
             List<SubjectEntity> subjectEntityList =
                     subjectsService.findAllBySemesterEntityId(semesterIdCallbackData.getSemesterId());
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(String.format(MessagesConstants.ANSWERS.SUBJECTS_LIST_HAT.getValue(),
                     semesterIdCallbackData.getSemesterId()))
                     .append("\n");
+            List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
             if (subjectEntityList.isEmpty()) {
                 stringBuilder.append(MessagesConstants.ANSWERS.EMPTY_LIST.getValue());
-                return new Response(new SendMessage(String.valueOf(chatId),stringBuilder.toString()),
-                        ResponseType.MESSAGE, this, null);
+                editMessageText.setText(stringBuilder.toString());
+                return editMessageText;
             }
-            List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
             for (SubjectEntity item : subjectEntityList) {
                 stringBuilder
                         .append(item.getId())
@@ -58,25 +61,26 @@ public class GetSubjectsListCallbackHandler implements CallbackHandler{
                                 String.valueOf(item.getId()),
                                 new CallbackData(
                                         CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
-                                        objectMapper.writeValueAsString(new SubjectIdAndMessageIdCallbackData(item.getId(),
-                                                0))))
+                                        objectMapper.writeValueAsString(new SubjectIdAndSemesterIdCallbackData(
+                                                item.getId(),
+                                                item.getSemesterEntity().getId()
+                                                )
+                                        ),
+                                        messageId
+                                )
+                        )
                 );
             }
             stringBuilder.append(MessagesConstants.ANSWERS.SUBJECTS_LIST_FOOTER.getValue());
             InlineKeyboardMarkup inlineKeyboardMarkup = KeyboardsFactory.generateInlineKeyboard(
                     inlineKeyboardButtonDataList, 2
             );
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setText(stringBuilder.toString());
-            sendMessage.setChatId(String.valueOf(chatId));
-            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-            return new Response(sendMessage,
-                    ResponseType.MESSAGE, this, null);
+            editMessageText.setText(stringBuilder.toString());
+            editMessageText.setReplyMarkup(inlineKeyboardMarkup);
+            return editMessageText;
         } catch (Exception e) {
             e.printStackTrace();
-            return new Response(new SendMessage(String.valueOf(chatId),
-                    "Failed to handle callback!"), ResponseType.MESSAGE,
-                    this, null);
+            return editMessageText;
         }
 
     }

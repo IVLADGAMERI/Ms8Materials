@@ -1,0 +1,29 @@
+package com.ms8materials.Ms8Materials.interaction.callbacks.handlers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ms8materials.Ms8Materials.events.MessageSentEvent;
+import com.ms8materials.Ms8Materials.interaction.Response;
+import com.ms8materials.Ms8Materials.interaction.ResponseType;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+
+public class ResponseBasedEditingCallbackHandler implements EditingCallbackHandler{
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
+    @Override
+    public Response handle(CallbackData callbackData, long chatId) {
+        Response response = new Response();
+        response.setType(ResponseType.EDIT);
+        response.setPayload(callbackData);
+        response.setSource(this);
+        response.setEditMessageText(editMessage(callbackData.getMId(), chatId, callbackData, response));
+        return response;
+    }
+
+    @Override
+    public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) {
+        return null;
+    }
+
+    @Override
+    public void handleMessageSentEvent(MessageSentEvent event) {}
+}

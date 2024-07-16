@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface SubjectDataRepository extends JpaRepository<SubjectDataEntity, Integer> {
     Optional<SubjectDataEntity> findByName(String name);
-    Page<SubjectDataEntity> findAllBySubjectId(int subjectId, Pageable pageable);
+    Page<SubjectDataEntity> findAllBySubjectIdAndType(int subjectId, String type, Pageable pageable);
 }

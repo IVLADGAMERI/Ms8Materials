@@ -7,8 +7,7 @@ public class MessagesConstants {
     @Getter
     @AllArgsConstructor
     public enum MAIN_KEYBOARD_BUTTONS {
-        FILES("\uD83D\uDCDA Материалы"), DASHBOARD("\uD83D\uDDD3 Расписание"),
-        SUBJECTS("\uD83D\uDCDA Предметы"), NOTES("\uD83D\uDCCB Заметки");
+        FILES("/\uD83D\uDCDA Материалы"), NOTES("/\uD83D\uDCCB Заметки");
         private final String value;
     }
     @Getter
@@ -23,7 +22,12 @@ public class MessagesConstants {
         SUBJECTS_LIST_FOOTER("Выбери номер интересующего предмета:"),
         MARKER("\uD83D\uDD39"),
         SUBJECT_MATERIALS_LIST_HAT("Выбери тип:"),
-        EMPTY_LIST("Список пуст!");
+        EMPTY_LIST("Список пуст!"),
+        NO_DATA("Нет данных."),
+        MESSAGE_UNRECOGNISED("Сообщение не распознано."),
+        SUBJECT_FILES_LIST_HAT("Список файлов\nПредмет: %s\nСтраница: %s\n"),
+        SUBJECT_FILES_LIST_ITEM_MARKUP("%s) %s\n"),
+        SUBJECT_FILES_LIST_FOOTER("Напиши в чат список нужных файлов (например 1, 10, 21).");
         private final String value;
     }
     @Getter
@@ -32,7 +36,8 @@ public class MessagesConstants {
         PREVIOUS_PAGE("⬅ Назад"),
         NEXT_PAGE("Вперед ➡"),
         FILES("\uD83D\uDCBE Файлы"),
-        PHOTOS("\uD83D\uDCF7 Фото");
+        PHOTOS("\uD83D\uDCF7 Фото"),
+        QUIT("⬅ Выход");
         private final String value;
     }
 }

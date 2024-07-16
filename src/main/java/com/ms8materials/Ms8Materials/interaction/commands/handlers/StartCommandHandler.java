@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.interaction.commands.commandsHandlers;
+package com.ms8materials.Ms8Materials.interaction.commands.handlers;
 import com.ms8materials.Ms8Materials.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
@@ -17,6 +17,6 @@ public class StartCommandHandler implements CommandHandler {
         sendMessage.setChatId(chatId);
         sendMessage.setText(MessagesConstants.ANSWERS.START_COMMAND_MESSAGE.getValue());
         sendMessage.setReplyMarkup(KeyboardsFactory.mainMenuKeyboard);
-        return new Response(sendMessage, ResponseType.MESSAGE, this, null);
+        return new Response(sendMessage, ResponseType.MESSAGE, this, null, null);
     }
 }
