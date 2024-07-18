@@ -116,8 +116,11 @@ public class GetSubjectFilesListCallbackHandler extends ResponseBasedEditingCall
                         MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_HAT.getValue(),
                         subjectEntity.getName(), pageIndex + 1));
                 log.info(String.valueOf(subjectDataEntityPage.getTotalPages()));
-                if ((subjectDataEntityPage.getTotalPages() - 1) == pageIndex) {
-                    inlineKeyboardButtonDataList.add(prevPageButtonData);
+                int totalPages = subjectDataEntityPage.getTotalPages();
+                if (totalPages - 1 == pageIndex) {
+                    if (pageIndex != 0) {
+                        inlineKeyboardButtonDataList.add(prevPageButtonData);
+                    }
                 } else if (pageIndex - 1 >= 0){
                     inlineKeyboardButtonDataList.add(prevPageButtonData);
                     inlineKeyboardButtonDataList.add(nextPageButtonData);
