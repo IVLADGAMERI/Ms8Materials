@@ -1,0 +1,73 @@
+package com.ms8materials.Ms8Materials.interaction.messages.handlers;
+
+import com.ms8materials.Ms8Materials.data.SubjectDataType;
+import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
+import com.ms8materials.Ms8Materials.data.services.SubjectsDataService;
+import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.interaction.Response;
+import com.ms8materials.Ms8Materials.interaction.ResponseType;
+import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.messages.MessageHandlerType;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+
+import java.util.List;
+
+@Component
+@Slf4j
+public class FindSubjectFilesMessageHandler implements MessageHandler {
+    @Autowired
+    private SubjectsDataService subjectsDataService;
+
+    @Override
+    @Transactional
+    public Response handle(Message message, Object payload) {
+        SubjectIdCallbackData callbackData = (SubjectIdCallbackData) payload;
+        Page<SubjectDataEntity> subjectDataEntityPage = subjectsDataService.findAllByName(
+                message.getText(),
+                callbackData.getSubId(),
+                SubjectDataType.FILE.getDbStringValue(),
+                0,
+                10
+        );
+        Response response = new Response();
+        response.setType(ResponseType.MESSAGE);
+        response.setSource(this);
+        response.setMessageHandlerType(MessageHandlerType.GET_SUBJECT_MATERIALS);
+        response.setPayload(null);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(message.getChatId());
+        StringBuilder stringBuilder = new StringBuilder();
+        List<SubjectDataEntity> subjectDataEntityList = subjectDataEntityPage.toList();
+        if (subjectDataEntityList.isEmpty()) {
+            stringBuilder.append(MessagesConstants.ANSWERS.NO_DATA.getValue());
+        } else {
+            stringBuilder.append(String.format(
+                            MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_HAT.getValue(),
+                            subjectDataEntityList.getFirst().getSubject().getName(),
+                            1
+                    )
+            );
+            for (SubjectDataEntity item : subjectDataEntityList) {
+                stringBuilder.append(
+                        String.format(
+                                MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_ITEM_MARKUP.getValue(),
+                                item.getId(),
+                                item.getName()
+                        )
+                );
+            }
+            stringBuilder.append(
+                    MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_FOOTER.getValue()
+            );
+        }
+        sendMessage.setText(stringBuilder.toString());
+        response.setSendMessage(sendMessage);
+        return response;
+    }
+}

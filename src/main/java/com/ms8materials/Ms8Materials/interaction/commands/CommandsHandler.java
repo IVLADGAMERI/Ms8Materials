@@ -1,6 +1,6 @@
 package com.ms8materials.Ms8Materials.interaction.commands;
 
-import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Handler;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;

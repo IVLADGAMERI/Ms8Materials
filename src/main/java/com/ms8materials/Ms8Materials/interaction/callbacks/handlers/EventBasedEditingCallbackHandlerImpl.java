@@ -1,7 +1,8 @@
 package com.ms8materials.Ms8Materials.interaction.callbacks.handlers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.events.EditMessageEvent;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
@@ -41,14 +42,22 @@ public class EventBasedEditingCallbackHandlerImpl implements EditingCallbackHand
     }
 
     @Override
-    public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) {
+    public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) throws JsonProcessingException {
         return null;
     }
 
     @Override
     public void handleMessageSentEvent(MessageSentEvent event) {
         if (event.getSource() == this) {
-            EditMessageText editMessageText = editMessage(event.getMessageId(), event.getChatId(), event.getPayload(), null);
+            EditMessageText editMessageText;
+            try {
+                editMessageText = editMessage(event.getMessageId(), event.getChatId(), event.getPayload(), null);
+            } catch (JsonProcessingException e) {
+                editMessageText = new EditMessageText();
+                editMessageText.setMessageId(event.getMessageId());
+                editMessageText.setChatId(event.getChatId());
+                editMessageText.setText(e.getMessage());
+            }
             applicationEventPublisher.publishEvent(new EditMessageEvent(
                     this, editMessageText
             ));

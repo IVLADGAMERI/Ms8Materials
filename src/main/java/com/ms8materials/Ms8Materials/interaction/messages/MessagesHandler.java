@@ -1,9 +1,11 @@
 package com.ms8materials.Ms8Materials.interaction.messages;
 
-import com.ms8materials.Ms8Materials.essentials.MessagesConstants;
+import com.ms8materials.Ms8Materials.ConversationContextData;
+import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Handler;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
+import com.ms8materials.Ms8Materials.interaction.messages.handlers.FindSubjectFilesMessageHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.GetSubjectMaterialsMessageHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.MessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,10 @@ import java.util.Map;
 @Component
 public class MessagesHandler implements Handler {
     private Map<MessageHandlerType, MessageHandler> handlers;
-    public MessagesHandler(@Autowired GetSubjectMaterialsMessageHandler getSubjectMaterialsMessageHandler) {
+    public MessagesHandler(@Autowired GetSubjectMaterialsMessageHandler getSubjectMaterialsMessageHandler,
+                           @Autowired FindSubjectFilesMessageHandler findSubjectFilesMessageHandler) {
         this.handlers = Map.of(
+                MessageHandlerType.FIND_SUBJECT_FILES, findSubjectFilesMessageHandler,
                 MessageHandlerType.GET_SUBJECT_MATERIALS, getSubjectMaterialsMessageHandler
         );
     }
@@ -25,9 +29,9 @@ public class MessagesHandler implements Handler {
     public Response handle(Update update, Object payload) {
         Response response;
         try {
-            MessageHandlerType messageHandlerType = (MessageHandlerType) payload;
-            MessageHandler messageHandler = handlers.get(messageHandlerType);
-            response = messageHandler.handle(update.getMessage().getText(), update.getMessage().getChatId());
+            ConversationContextData conversationContextData = (ConversationContextData) payload;
+            MessageHandler messageHandler = handlers.get(conversationContextData.getMessageHandlerType());
+            response = messageHandler.handle(update.getMessage(), conversationContextData.getPayload());
         } catch (Exception e) {
             e.printStackTrace();
             response = new Response(new SendMessage(String.valueOf(update.getMessage().getChatId()),

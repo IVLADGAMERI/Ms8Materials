@@ -31,7 +31,8 @@ public class CallbacksHandler implements Handler {
                             @Autowired GetSubjectMaterialsListCallbackHandler getSubjectMaterialsListCallbackHandler,
                             @Autowired GetSubjectFileCallbackHandler getSubjectFileCallbackHandler,
                             @Autowired GetSubjectPhotoCallbackHandler getSubjectPhotoCallbackHandler,
-                            @Autowired GetSubjectNoteCallbackHandler getSubjectNoteCallbackHandler) {
+                            @Autowired GetSubjectNoteCallbackHandler getSubjectNoteCallbackHandler,
+                            @Autowired FindSubjectFileCallbackHandler findSubjectFileCallbackHandler) {
         this.callbackHandlers = Map.of(
                 CallbackType.GET_SUBJECTS_LIST, getSubjectsListCallbackHandler,
                 CallbackType.GET_SUBJECT_FILES_LIST, getSubjectFilesListCallbackHandler,
@@ -40,7 +41,8 @@ public class CallbacksHandler implements Handler {
                 CallbackType.GET_SUBJECT_MATERIALS_LIST, getSubjectMaterialsListCallbackHandler,
                 CallbackType.GET_SUBJECT_NOTE, getSubjectNoteCallbackHandler,
                 CallbackType.GET_SUBJECT_PHOTO, getSubjectPhotoCallbackHandler,
-                CallbackType.GET_SUBJECT_FILE, getSubjectFileCallbackHandler);
+                CallbackType.GET_SUBJECT_FILE, getSubjectFileCallbackHandler,
+                CallbackType.FIND_SUBJECT_FILE, findSubjectFileCallbackHandler);
     }
 
 

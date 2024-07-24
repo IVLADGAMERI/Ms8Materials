@@ -1,5 +1,6 @@
 package com.ms8materials.Ms8Materials.interaction.callbacks.handlers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
@@ -15,12 +16,19 @@ public class ResponseBasedEditingCallbackHandler implements EditingCallbackHandl
         response.setType(ResponseType.EDIT);
         response.setPayload(callbackData);
         response.setSource(this);
-        response.setEditMessageText(editMessage(callbackData.getMId(), chatId, callbackData, response));
+        try {
+            response.setEditMessageText(editMessage(callbackData.getMId(), chatId, callbackData, response));
+        } catch (JsonProcessingException e) {
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setChatId(chatId);
+            editMessageText.setMessageId(callbackData.getMId());
+            editMessageText.setText(e.getMessage());
+        }
         return response;
     }
 
     @Override
-    public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) {
+    public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) throws JsonProcessingException {
         return null;
     }
 

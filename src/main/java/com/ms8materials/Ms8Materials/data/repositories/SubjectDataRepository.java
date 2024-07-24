@@ -4,6 +4,8 @@ import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,4 +14,6 @@ import java.util.Optional;
 public interface SubjectDataRepository extends JpaRepository<SubjectDataEntity, Integer> {
     Optional<SubjectDataEntity> findByName(String name);
     Page<SubjectDataEntity> findAllBySubjectIdAndType(int subjectId, String type, Pageable pageable);
+    Page<SubjectDataEntity> findAllBySubjectIdAndTypeAndNameContains(int subjectId, String type,
+                                                  String name, Pageable pageable);
 }

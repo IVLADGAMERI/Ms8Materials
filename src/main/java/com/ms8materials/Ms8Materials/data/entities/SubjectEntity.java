@@ -20,6 +20,7 @@ public class SubjectEntity {
     @ManyToOne
     @JoinColumn(name = "semester_id")
     private SemesterEntity semesterEntity;
-    @OneToMany(mappedBy = "subject", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<SubjectDataEntity> subjectDataList;
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "subject_id")
+    private List<SubjectDataEntity> subjectDataList = new ArrayList<>();
 }

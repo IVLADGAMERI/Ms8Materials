@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.essentials;
+package com.ms8materials.Ms8Materials.interaction.essentials;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,15 +24,18 @@ public class MessagesConstants {
         SUBJECT_MATERIALS_LIST_HAT("Выбери тип:"),
         EMPTY_LIST("Список пуст!"),
         NO_DATA("Нет данных."),
+        FIND_SUBJECT_FILES("Поиск файлов\nНомер предмета: %s\nВведи название файла или его часть:"),
         MESSAGE_UNRECOGNISED("Сообщение не распознано."),
         SUBJECT_FILES_LIST_HAT("Список файлов\nПредмет: %s\nСтраница: %s\n"),
         SUBJECT_FILES_LIST_ITEM_MARKUP("%s) %s\n"),
-        SUBJECT_FILES_LIST_FOOTER("Напиши в чат список нужных файлов (например 1, 10, 21).");
+        SUBJECT_FILES_LIST_FOOTER("Напиши в чат список нужных файлов (например 1, 10, 21).\n" +
+                "Если файл долго не отправляется - просто подожди окончания загрузки.");
         private final String value;
     }
     @Getter
     @AllArgsConstructor
     public enum INLINE_BUTTONS_TEXT {
+        FIND("\uD83D\uDD0E Найти"),
         PREVIOUS_PAGE("⬅ Назад"),
         NEXT_PAGE("Вперед ➡"),
         FILES("\uD83D\uDCBE Файлы"),

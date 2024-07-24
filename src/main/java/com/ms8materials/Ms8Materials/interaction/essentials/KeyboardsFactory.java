@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.essentials;
+package com.ms8materials.Ms8Materials.interaction.essentials;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
