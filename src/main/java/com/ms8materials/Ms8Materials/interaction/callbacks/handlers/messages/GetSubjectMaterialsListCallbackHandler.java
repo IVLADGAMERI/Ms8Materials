@@ -58,7 +58,6 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
                         pageIndex, 10);
         InlineKeyboardMarkup inlineKeyboardMarkup;
         List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = new ArrayList<>();
-        int inlineKeyboardButtonDataListIndex = 0;
         int semesterId = subjectEntityOptional.get().getSemesterEntity().getId();
         InlineKeyboardButtonData quitButtonData = new InlineKeyboardButtonData(
                 MessagesConstants.INLINE_BUTTONS_TEXT.QUIT.getValue(),
