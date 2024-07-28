@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CallbackData {
-    private String type;
-    private String data;
-    private int mId;
+    private String t;
+    private String d;
+    private int mI;
 }

@@ -1,6 +1,5 @@
-package com.ms8materials.Ms8Materials.data.entities;
+package com.ms8materials.Ms8Materials.data.jpa.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 

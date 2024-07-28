@@ -1,5 +1,7 @@
 package com.ms8materials.Ms8Materials;
 
+import com.ms8materials.Ms8Materials.data.app.ConversationContextData;
+import com.ms8materials.Ms8Materials.data.app.containers.chat.ConversationContextContainer;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.events.EditMessageEvent;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
@@ -25,9 +27,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component("tgBotMain")
 @Slf4j
@@ -44,7 +44,6 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
     private CommandsHandler commandsHandler;
     @Autowired
     private MessagesHandler messagesHandler;
-    private Map<Long, ConversationContextData> conversationContext = new HashMap<>();
     @Override
     public void onUpdateReceived(Update update) {
         long chatId;
@@ -64,14 +63,14 @@ public class TgBotMain extends TelegramLongPollingBot implements ApplicationEven
                 update.getMessage().hasDocument() ||
                 update.getMessage().hasPhoto())){
             chatId = update.getMessage().getChatId();
-            response = messagesHandler.handle(update, conversationContext.get(chatId));
+            response = messagesHandler.handle(update, ConversationContextContainer.get(chatId));
         } else {
             chatId = update.getMessage().getChatId();
             response = new Response(new SendMessage(String.valueOf(chatId),
                     MessagesConstants.ANSWERS.MESSAGE_UNRECOGNISED.getValue()),
                     ResponseType.MESSAGE, this, null, null);
         }
-        conversationContext.put(chatId, new ConversationContextData(
+        ConversationContextContainer.put(chatId, new ConversationContextData(
                 response.getMessageHandlerType(),
                 response.getPayload()
         ));

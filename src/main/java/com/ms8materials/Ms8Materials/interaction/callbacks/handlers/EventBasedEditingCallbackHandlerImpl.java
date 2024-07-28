@@ -19,7 +19,7 @@ public class EventBasedEditingCallbackHandlerImpl implements EditingCallbackHand
     @Override
     public Response handle(CallbackData callbackData, long chatId) {
         try {
-            if (callbackData.getMId() == 0) {
+            if (callbackData.getMI() == 0) {
                 return new Response(new SendMessage(String.valueOf(chatId), MessagesConstants.ANSWERS.WAIT.getValue()),
                         ResponseType.MESSAGE,
                         this, callbackData, null);
@@ -29,7 +29,7 @@ public class EventBasedEditingCallbackHandlerImpl implements EditingCallbackHand
                 response.setType(ResponseType.EDIT);
                 response.setSource(this);
                 response.setPayload(callbackData);
-                EditMessageText editMessageText = editMessage(callbackData.getMId(), chatId, callbackData, response);
+                EditMessageText editMessageText = editMessage(callbackData.getMI(), chatId, callbackData, response);
                 response.setEditMessageText(editMessageText);
                 return response;
             }

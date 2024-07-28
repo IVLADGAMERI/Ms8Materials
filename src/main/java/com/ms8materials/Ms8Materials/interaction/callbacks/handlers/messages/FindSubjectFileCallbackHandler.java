@@ -20,7 +20,7 @@ public class FindSubjectFileCallbackHandler extends CallbackHandlerImpl {
         response.setType(ResponseType.MESSAGE);
         response.setSource(this);
         try {
-            SubjectIdCallbackData subjectIdCallbackData = objectMapper.readValue(callbackData.getData(),
+            SubjectIdCallbackData subjectIdCallbackData = objectMapper.readValue(callbackData.getD(),
                     SubjectIdCallbackData.class);
             response.setSendMessage(
                     new SendMessage(

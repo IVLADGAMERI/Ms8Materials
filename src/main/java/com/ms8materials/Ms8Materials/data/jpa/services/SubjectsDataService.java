@@ -1,7 +1,7 @@
-package com.ms8materials.Ms8Materials.data.services;
+package com.ms8materials.Ms8Materials.data.jpa.services;
 
-import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
-import com.ms8materials.Ms8Materials.data.repositories.SubjectDataRepository;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
+import com.ms8materials.Ms8Materials.data.jpa.repositories.SubjectDataRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

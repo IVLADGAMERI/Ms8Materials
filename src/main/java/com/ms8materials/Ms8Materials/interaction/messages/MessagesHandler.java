@@ -1,6 +1,6 @@
 package com.ms8materials.Ms8Materials.interaction.messages;
 
-import com.ms8materials.Ms8Materials.ConversationContextData;
+import com.ms8materials.Ms8Materials.data.app.ConversationContextData;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Handler;
 import com.ms8materials.Ms8Materials.interaction.Response;

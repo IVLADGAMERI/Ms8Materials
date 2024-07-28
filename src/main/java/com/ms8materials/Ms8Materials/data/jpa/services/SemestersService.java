@@ -1,7 +1,7 @@
-package com.ms8materials.Ms8Materials.data.services;
+package com.ms8materials.Ms8Materials.data.jpa.services;
 
-import com.ms8materials.Ms8Materials.data.entities.SemesterEntity;
-import com.ms8materials.Ms8Materials.data.repositories.SemestersRepository;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SemesterEntity;
+import com.ms8materials.Ms8Materials.data.jpa.repositories.SemestersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

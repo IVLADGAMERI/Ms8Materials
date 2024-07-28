@@ -25,19 +25,17 @@ public class CallbacksHandler implements Handler {
 
 
     public CallbacksHandler(@Autowired GetSubjectsListCallbackHandler getSubjectsListCallbackHandler,
-                            @Autowired GetSubjectFilesListCallbackHandler getSubjectFilesListCallbackHandler,
-                            @Autowired GetSubjectNotesListCallbackHandler getSubjectNotesListCallbackHandler,
-                            @Autowired GetSubjectPhotosListCallbackHandler getSubjectPhotosListCallbackHandler,
                             @Autowired GetSubjectMaterialsListCallbackHandler getSubjectMaterialsListCallbackHandler,
+                            @Autowired GetSubjectNotesListCallbackHandler getSubjectNotesListCallbackHandler,
+                            @Autowired GetSubjectMaterialsTypesListCallbackHandler getSubjectMaterialsTypesListCallbackHandler,
                             @Autowired GetSubjectFileCallbackHandler getSubjectFileCallbackHandler,
                             @Autowired GetSubjectPhotoCallbackHandler getSubjectPhotoCallbackHandler,
                             @Autowired GetSubjectNoteCallbackHandler getSubjectNoteCallbackHandler,
                             @Autowired FindSubjectFileCallbackHandler findSubjectFileCallbackHandler) {
         this.callbackHandlers = Map.of(
                 CallbackType.GET_SUBJECTS_LIST, getSubjectsListCallbackHandler,
-                CallbackType.GET_SUBJECT_FILES_LIST, getSubjectFilesListCallbackHandler,
+                CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST, getSubjectMaterialsTypesListCallbackHandler,
                 CallbackType.GET_SUBJECT_NOTES_LIST, getSubjectNotesListCallbackHandler,
-                CallbackType.GET_SUBJECT_PHOTOS_LIST, getSubjectPhotosListCallbackHandler,
                 CallbackType.GET_SUBJECT_MATERIALS_LIST, getSubjectMaterialsListCallbackHandler,
                 CallbackType.GET_SUBJECT_NOTE, getSubjectNoteCallbackHandler,
                 CallbackType.GET_SUBJECT_PHOTO, getSubjectPhotoCallbackHandler,
@@ -50,7 +48,7 @@ public class CallbacksHandler implements Handler {
         try {
             CallbackData callbackData = objectMapper.readValue(update.getCallbackQuery().getData(), CallbackData.class);
             log.info(callbackData.toString());
-            String callbackTypeString = callbackData.getType();
+            String callbackTypeString = callbackData.getT();
             CallbackHandler callbackHandler =
                     callbackHandlers.get(CallbackType.getByName(callbackTypeString));
             if (callbackHandler == null) {

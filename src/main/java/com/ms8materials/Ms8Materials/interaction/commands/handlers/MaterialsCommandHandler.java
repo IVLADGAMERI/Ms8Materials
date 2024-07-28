@@ -1,8 +1,8 @@
 package com.ms8materials.Ms8Materials.interaction.commands.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms8materials.Ms8Materials.data.entities.SemesterEntity;
-import com.ms8materials.Ms8Materials.data.services.SemestersService;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SemesterEntity;
+import com.ms8materials.Ms8Materials.data.jpa.services.SemestersService;
 import com.ms8materials.Ms8Materials.interaction.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;

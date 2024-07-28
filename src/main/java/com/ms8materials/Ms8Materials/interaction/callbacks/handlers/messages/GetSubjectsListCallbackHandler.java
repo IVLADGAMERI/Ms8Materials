@@ -3,8 +3,8 @@ package com.ms8materials.Ms8Materials.interaction.callbacks.handlers.messages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms8materials.Ms8Materials.data.entities.SubjectEntity;
-import com.ms8materials.Ms8Materials.data.services.SubjectsService;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectEntity;
+import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsService;
 import com.ms8materials.Ms8Materials.interaction.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
@@ -33,7 +33,7 @@ public class GetSubjectsListCallbackHandler extends EventBasedEditingCallbackHan
     public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) throws JsonProcessingException {
         EditMessageText editMessageText = new EditMessageText();
         CallbackData callbackData = (CallbackData) payload;
-        SemesterIdCallbackData semesterIdCallbackData = objectMapper.readValue(callbackData.getData(),
+        SemesterIdCallbackData semesterIdCallbackData = objectMapper.readValue(callbackData.getD(),
                 SemesterIdCallbackData.class);
         editMessageText.setMessageId(messageId);
         editMessageText.setChatId(chatId);
@@ -61,7 +61,7 @@ public class GetSubjectsListCallbackHandler extends EventBasedEditingCallbackHan
                     new InlineKeyboardButtonData(
                             String.valueOf(item.getId()),
                             new CallbackData(
-                                    CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
+                                    CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST.getName(),
                                     objectMapper.writeValueAsString(new SubjectIdAndSemesterIdCallbackData(
                                                     item.getId(),
                                                     item.getSemesterEntity().getId()

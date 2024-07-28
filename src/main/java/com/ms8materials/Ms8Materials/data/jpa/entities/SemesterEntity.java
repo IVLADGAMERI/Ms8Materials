@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials.data.entities;
+package com.ms8materials.Ms8Materials.data.jpa.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package com.ms8materials.Ms8Materials.interaction.messages.handlers;
 
-import com.ms8materials.Ms8Materials.data.SubjectDataType;
-import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
-import com.ms8materials.Ms8Materials.data.services.SubjectsDataService;
+import com.ms8materials.Ms8Materials.data.jpa.SubjectDataType;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
+import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsDataService;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
@@ -27,22 +27,30 @@ public class FindSubjectFilesMessageHandler implements MessageHandler {
     @Override
     @Transactional
     public Response handle(Message message, Object payload) {
+        String messageText = message.getText().strip();
+        int pageIndex = 0;
+        int pageMarkPosition = messageText.lastIndexOf('/');
+        String searchString = messageText;
+        if (pageMarkPosition > 0) {
+            pageIndex = Integer.parseInt(messageText.substring(pageMarkPosition + 1)) - 1;
+            searchString = messageText.substring(0, pageMarkPosition - 1).strip();
+        }
         SubjectIdCallbackData callbackData = (SubjectIdCallbackData) payload;
         Page<SubjectDataEntity> subjectDataEntityPage = subjectsDataService.findAllByName(
-                message.getText(),
+                searchString,
                 callbackData.getSubId(),
-                SubjectDataType.FILE.getDbStringValue(),
-                0,
+                SubjectDataType.FILE.name(),
+                pageIndex,
                 10
         );
         Response response = new Response();
         response.setType(ResponseType.MESSAGE);
         response.setSource(this);
-        response.setMessageHandlerType(MessageHandlerType.GET_SUBJECT_MATERIALS);
-        response.setPayload(null);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId());
         StringBuilder stringBuilder = new StringBuilder();
+        response.setMessageHandlerType(MessageHandlerType.GET_SUBJECT_MATERIALS);
+        response.setPayload(payload);
         List<SubjectDataEntity> subjectDataEntityList = subjectDataEntityPage.toList();
         if (subjectDataEntityList.isEmpty()) {
             stringBuilder.append(MessagesConstants.ANSWERS.NO_DATA.getValue());
@@ -50,7 +58,8 @@ public class FindSubjectFilesMessageHandler implements MessageHandler {
             stringBuilder.append(String.format(
                             MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_HAT.getValue(),
                             subjectDataEntityList.getFirst().getSubject().getName(),
-                            1
+                            pageIndex + 1,
+                            subjectDataEntityPage.getTotalPages()
                     )
             );
             for (SubjectDataEntity item : subjectDataEntityList) {

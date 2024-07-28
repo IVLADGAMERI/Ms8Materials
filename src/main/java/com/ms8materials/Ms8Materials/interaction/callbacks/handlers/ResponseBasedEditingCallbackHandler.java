@@ -17,11 +17,11 @@ public class ResponseBasedEditingCallbackHandler implements EditingCallbackHandl
         response.setPayload(callbackData);
         response.setSource(this);
         try {
-            response.setEditMessageText(editMessage(callbackData.getMId(), chatId, callbackData, response));
+            response.setEditMessageText(editMessage(callbackData.getMI(), chatId, callbackData, response));
         } catch (JsonProcessingException e) {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(chatId);
-            editMessageText.setMessageId(callbackData.getMId());
+            editMessageText.setMessageId(callbackData.getMI());
             editMessageText.setText(e.getMessage());
         }
         return response;

@@ -1,4 +1,4 @@
-package com.ms8materials.Ms8Materials;
+package com.ms8materials.Ms8Materials.data.app;
 
 import com.ms8materials.Ms8Materials.interaction.messages.MessageHandlerType;
 import lombok.AllArgsConstructor;

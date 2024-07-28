@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Response {
     private Object source;
-
     private SendMessage sendMessage;
     private List<SendDocument> sendDocumentList;
     private SendMediaGroup sendMediaGroup;

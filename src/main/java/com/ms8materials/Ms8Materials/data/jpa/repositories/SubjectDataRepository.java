@@ -1,11 +1,9 @@
-package com.ms8materials.Ms8Materials.data.repositories;
+package com.ms8materials.Ms8Materials.data.jpa.repositories;
 
-import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

@@ -1,8 +1,8 @@
 package com.ms8materials.Ms8Materials.interaction.messages.handlers;
 
-import com.ms8materials.Ms8Materials.data.entities.SubjectDataEntity;
-import com.ms8materials.Ms8Materials.data.services.FilesService;
-import com.ms8materials.Ms8Materials.data.services.SubjectsDataService;
+import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
+import com.ms8materials.Ms8Materials.data.jpa.services.FilesService;
+import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsDataService;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
