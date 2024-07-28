@@ -10,10 +10,10 @@ import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.EventBasedEditingCallbackHandlerImpl;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SemesterIdCallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndSemesterIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SemesterIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndSemesterIdData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -62,7 +62,7 @@ public class GetSubjectsListCallbackHandler extends EventBasedEditingCallbackHan
                             String.valueOf(item.getId()),
                             new CallbackData(
                                     CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST.getName(),
-                                    objectMapper.writeValueAsString(new SubjectIdAndSemesterIdCallbackData(
+                                    objectMapper.writeValueAsString(new SubjectIdAndSemesterIdData(
                                                     item.getId(),
                                                     item.getSemesterEntity().getId()
                                             )

@@ -8,7 +8,7 @@ import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.CallbackHand
 import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.documents.GetSubjectFileCallbackHandler;
 import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.messages.*;
 import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.photos.GetSubjectPhotoCallbackHandler;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

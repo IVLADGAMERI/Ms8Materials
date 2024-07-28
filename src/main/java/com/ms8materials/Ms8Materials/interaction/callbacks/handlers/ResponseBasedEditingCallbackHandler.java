@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
 public class ResponseBasedEditingCallbackHandler implements EditingCallbackHandler{

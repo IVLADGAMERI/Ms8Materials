@@ -6,15 +6,12 @@ import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
 import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectEntity;
 import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsDataService;
 import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsService;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndPageNumberAndTypeCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.*;
 import com.ms8materials.Ms8Materials.interaction.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.callbacks.CallbackType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdCallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdAndSemesterIdCallbackData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.ResponseBasedEditingCallbackHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.MessageHandlerType;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +41,8 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
         editMessageText.setMessageId(messageId);
         editMessageText.setChatId(chatId);
         CallbackData castedPayload = (CallbackData) payload;
-        SubjectIdAndPageNumberAndTypeCallbackData callbackData = objectMapper.readValue(castedPayload.getD(),
-                SubjectIdAndPageNumberAndTypeCallbackData.class);
+        SubjectIdAndPageNumberAndTypeData callbackData = objectMapper.readValue(castedPayload.getD(),
+                SubjectIdAndPageNumberAndTypeData.class);
         int subjectId = callbackData.getSId();
         int pageIndex = callbackData.getP();
         SubjectDataType subjectDataType = SubjectDataType.getByCallbackDataValue(callbackData.getT());
@@ -64,7 +61,7 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
                 new CallbackData(
                         CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST.getName(),
                         objectMapper.writeValueAsString(
-                                new SubjectIdAndSemesterIdCallbackData(
+                                new SubjectIdAndSemesterIdData(
                                         subjectId,
                                         semesterId
                                 )
@@ -77,7 +74,7 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
                 new CallbackData(
                         CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
                         objectMapper.writeValueAsString(
-                                new SubjectIdAndPageNumberAndTypeCallbackData(
+                                new SubjectIdAndPageNumberAndTypeData(
                                         subjectId,
                                         pageIndex - 1,
                                         SubjectDataType.FILE.getCallbackDataValue()
@@ -91,7 +88,7 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
                 new CallbackData(
                         CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
                         objectMapper.writeValueAsString(
-                                new SubjectIdAndPageNumberAndTypeCallbackData(
+                                new SubjectIdAndPageNumberAndTypeData(
                                         subjectId,
                                         pageIndex + 1,
                                         SubjectDataType.FILE.getCallbackDataValue()
@@ -105,7 +102,7 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
                 new CallbackData(
                         CallbackType.FIND_SUBJECT_FILE.getName(),
                         objectMapper.writeValueAsString(
-                                new SubjectIdCallbackData(
+                                new SubjectIdData(
                                         subjectId
                                 )
                         ),
@@ -154,6 +151,7 @@ public class GetSubjectMaterialsListCallbackHandler extends ResponseBasedEditing
             editMessageText.setReplyMarkup(inlineKeyboardMarkup);
             stringBuilder.append(MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_FOOTER.getValue());
             response.setMessageHandlerType(MessageHandlerType.GET_SUBJECT_MATERIALS);
+            response.setPayload(new SubjectDataTypeData(subjectDataType.getCallbackDataValue()));
         }
         editMessageText.setText(stringBuilder.toString());
 

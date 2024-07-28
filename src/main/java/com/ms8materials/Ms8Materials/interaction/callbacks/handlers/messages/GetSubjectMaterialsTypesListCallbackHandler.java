@@ -3,7 +3,10 @@ package com.ms8materials.Ms8Materials.interaction.callbacks.handlers.messages;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms8materials.Ms8Materials.data.jpa.SubjectDataType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.*;
+import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SemesterIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndPageNumberAndTypeData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndSemesterIdData;
 import com.ms8materials.Ms8Materials.interaction.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
@@ -29,16 +32,16 @@ public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEd
         editMessageText.setMessageId(messageId);
         editMessageText.setChatId(chatId);
         CallbackData castedPayload = (CallbackData) payload;
-        SubjectIdAndSemesterIdCallbackData subjectIdAndSemesterIdCallbackData = objectMapper.readValue(castedPayload.getD(),
-                SubjectIdAndSemesterIdCallbackData.class);
+        SubjectIdAndSemesterIdData subjectIdAndSemesterIdData = objectMapper.readValue(castedPayload.getD(),
+                SubjectIdAndSemesterIdData.class);
         List<InlineKeyboardButtonData> inlineKeyboardButtonDataList = List.of(
                 new InlineKeyboardButtonData(
                         MessagesConstants.INLINE_BUTTONS_TEXT.FILES.getValue(),
                         new CallbackData(
                                 CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
                                 objectMapper.writeValueAsString(
-                                        new SubjectIdAndPageNumberAndTypeCallbackData(
-                                                subjectIdAndSemesterIdCallbackData.getSubId(),
+                                        new SubjectIdAndPageNumberAndTypeData(
+                                                subjectIdAndSemesterIdData.getSubId(),
                                                 0,
                                                 SubjectDataType.FILE.getCallbackDataValue()
                                         )
@@ -51,8 +54,8 @@ public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEd
                         new CallbackData(
                                 CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
                                 objectMapper.writeValueAsString(
-                                        new SubjectIdAndPageNumberAndTypeCallbackData(
-                                                subjectIdAndSemesterIdCallbackData.getSubId(),
+                                        new SubjectIdAndPageNumberAndTypeData(
+                                                subjectIdAndSemesterIdData.getSubId(),
                                                 0,
                                                 SubjectDataType.PHOTO.getCallbackDataValue()
                                         )
@@ -65,7 +68,7 @@ public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEd
                         new CallbackData(
                                 CallbackType.GET_SUBJECTS_LIST.getName(),
                                 objectMapper.writeValueAsString(new SemesterIdCallbackData(
-                                                subjectIdAndSemesterIdCallbackData.getSemId()
+                                                subjectIdAndSemesterIdData.getSemId()
                                         )
                                 ),
                                 messageId

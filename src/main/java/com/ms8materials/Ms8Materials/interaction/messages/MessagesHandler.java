@@ -8,6 +8,7 @@ import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.FindSubjectFilesMessageHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.GetSubjectMaterialsMessageHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.MessageHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class MessagesHandler implements Handler {
     private Map<MessageHandlerType, MessageHandler> handlers;
     public MessagesHandler(@Autowired GetSubjectMaterialsMessageHandler getSubjectMaterialsMessageHandler,

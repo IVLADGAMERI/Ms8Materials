@@ -26,8 +26,8 @@ public class SubjectsDataService {
         return subjectDataRepository.findAllBySubjectIdAndTypeAndNameContains(subId, type, name,
                 PageRequest.of(pageNumber, pageSize));
     }
-    public List<SubjectDataEntity> findAllByIds(List<Integer> ids) {
-        return subjectDataRepository.findAllById(ids);
+    public List<SubjectDataEntity> findAllByIdsAndType(List<Integer> ids, String type) {
+        return subjectDataRepository.findAllByIdAndType(ids, type);
     }
 
 }

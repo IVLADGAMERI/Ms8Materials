@@ -7,7 +7,7 @@ import com.ms8materials.Ms8Materials.events.EditMessageEvent;
 import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

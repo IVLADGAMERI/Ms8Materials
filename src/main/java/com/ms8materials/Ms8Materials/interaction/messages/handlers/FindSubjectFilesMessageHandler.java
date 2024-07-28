@@ -6,7 +6,7 @@ import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsDataService;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdData;
 import com.ms8materials.Ms8Materials.interaction.messages.MessageHandlerType;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class FindSubjectFilesMessageHandler implements MessageHandler {
             pageIndex = Integer.parseInt(messageText.substring(pageMarkPosition + 1)) - 1;
             searchString = messageText.substring(0, pageMarkPosition - 1).strip();
         }
-        SubjectIdCallbackData callbackData = (SubjectIdCallbackData) payload;
+        SubjectIdData callbackData = (SubjectIdData) payload;
         Page<SubjectDataEntity> subjectDataEntityPage = subjectsDataService.findAllByName(
                 searchString,
                 callbackData.getSubId(),

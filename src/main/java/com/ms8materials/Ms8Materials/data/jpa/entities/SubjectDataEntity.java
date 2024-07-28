@@ -12,7 +12,7 @@ public class SubjectDataEntity {
     private int id;
     @Column(nullable = false)
     private String type;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
     @Column(name = "file_relative_path", nullable = false)
     private String fileRelativePath;

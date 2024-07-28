@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.CallbackData;
-import com.ms8materials.Ms8Materials.interaction.callbacks.data.SubjectIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdData;
 import com.ms8materials.Ms8Materials.interaction.callbacks.handlers.CallbackHandlerImpl;
 import com.ms8materials.Ms8Materials.interaction.messages.MessageHandlerType;
 import org.springframework.stereotype.Component;
@@ -20,16 +20,16 @@ public class FindSubjectFileCallbackHandler extends CallbackHandlerImpl {
         response.setType(ResponseType.MESSAGE);
         response.setSource(this);
         try {
-            SubjectIdCallbackData subjectIdCallbackData = objectMapper.readValue(callbackData.getD(),
-                    SubjectIdCallbackData.class);
+            SubjectIdData subjectIdData = objectMapper.readValue(callbackData.getD(),
+                    SubjectIdData.class);
             response.setSendMessage(
                     new SendMessage(
                             String.valueOf(chatId),
-                            String.format(MessagesConstants.ANSWERS.FIND_SUBJECT_FILES.getValue(), subjectIdCallbackData.getSubId())
+                            String.format(MessagesConstants.ANSWERS.FIND_SUBJECT_FILES.getValue(), subjectIdData.getSubId())
                     )
             );
             response.setMessageHandlerType(MessageHandlerType.FIND_SUBJECT_FILES);
-            response.setPayload(subjectIdCallbackData);
+            response.setPayload(subjectIdData);
         } catch (JsonProcessingException e) {
             response.setSendMessage(
                     new SendMessage(
