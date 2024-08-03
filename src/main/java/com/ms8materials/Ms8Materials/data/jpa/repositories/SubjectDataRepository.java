@@ -17,6 +17,7 @@ public interface SubjectDataRepository extends JpaRepository<SubjectDataEntity, 
     Page<SubjectDataEntity> findAllBySubjectIdAndType(int subjectId, String type, Pageable pageable);
     Page<SubjectDataEntity> findAllBySubjectIdAndTypeAndNameContains(int subjectId, String type,
                                                   String name, Pageable pageable);
-    @Query("SELECT s FROM SubjectDataEntity s WHERE s.id IN (:ids) AND s.type = :type")
-    List<SubjectDataEntity> findAllByIdAndType(@Param("ids") List<Integer> ids, @Param("type") String type);
+    @Query("SELECT s FROM SubjectDataEntity s WHERE s.id IN (:ids) AND s.type = :type AND s.subject.id = :subjectId")
+    List<SubjectDataEntity> findAllByIdAndTypeAndSubjectId(@Param("ids") List<Integer> ids, @Param("type") String type,
+                                                           @Param("subjectId") int subjectId);
 }

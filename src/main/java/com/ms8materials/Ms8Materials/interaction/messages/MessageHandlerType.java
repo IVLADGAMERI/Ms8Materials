@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MessageHandlerType {
     GET_SUBJECT_MATERIALS("GSM"),
-    FIND_SUBJECT_FILES("FSM");
+    FIND_SUBJECT_DATA("FSD");
     private String name;
 }

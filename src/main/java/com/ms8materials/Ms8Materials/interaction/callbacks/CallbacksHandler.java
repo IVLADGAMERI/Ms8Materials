@@ -26,25 +26,26 @@ public class CallbacksHandler implements Handler {
 
 
     public CallbacksHandler(@Autowired GetSubjectsListCallbackHandler getSubjectsListCallbackHandler,
-                            @Autowired GetSubjectMaterialsListCallbackHandler getSubjectMaterialsListCallbackHandler,
+                            @Autowired GetSubjectDataListCallbackHandler getSubjectDataListCallbackHandler,
                             @Autowired GetSubjectNotesListCallbackHandler getSubjectNotesListCallbackHandler,
-                            @Autowired GetSubjectMaterialsTypesListCallbackHandler getSubjectMaterialsTypesListCallbackHandler,
+                            @Autowired GetSubjectDataTypesListCallbackHandler getSubjectDataTypesListCallbackHandler,
                             @Autowired GetSubjectFileCallbackHandler getSubjectFileCallbackHandler,
                             @Autowired GetSubjectPhotoCallbackHandler getSubjectPhotoCallbackHandler,
                             @Autowired GetSubjectNoteCallbackHandler getSubjectNoteCallbackHandler,
-                            @Autowired FindSubjectFileCallbackHandler findSubjectFileCallbackHandler) {
+                            @Autowired FindSubjectDataCallbackHandler findSubjectDataCallbackHandler) {
         this.callbackHandlers = new HashMap<>();
         callbackHandlers.put(CallbackType.GET_SUBJECTS_LIST, getSubjectsListCallbackHandler);
-        callbackHandlers.put(CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST, getSubjectMaterialsTypesListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST, getSubjectDataTypesListCallbackHandler);
         callbackHandlers.put(CallbackType.GET_SUBJECT_NOTES_LIST, getSubjectNotesListCallbackHandler);
-        callbackHandlers.put(CallbackType.GET_SUBJECT_FILES_LIST_DESCENDING, getSubjectMaterialsListCallbackHandler);
-        callbackHandlers.put(CallbackType.GET_SUBJECT_FILES_LIST_ASCENDING, getSubjectMaterialsListCallbackHandler);
-        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTOS_LIST_ASCENDING, getSubjectMaterialsListCallbackHandler);
-        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTOS_LIST_DESCENDING, getSubjectMaterialsListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_FILES_LIST_DESCENDING, getSubjectDataListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_FILES_LIST_ASCENDING, getSubjectDataListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTOS_LIST_ASCENDING, getSubjectDataListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTOS_LIST_DESCENDING, getSubjectDataListCallbackHandler);
         callbackHandlers.put(CallbackType.GET_SUBJECT_NOTE, getSubjectNoteCallbackHandler);
         callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTO, getSubjectPhotoCallbackHandler);
         callbackHandlers.put(CallbackType.GET_SUBJECT_FILE, getSubjectFileCallbackHandler);
-        callbackHandlers.put(CallbackType.FIND_SUBJECT_FILE, findSubjectFileCallbackHandler);
+        callbackHandlers.put(CallbackType.FIND_SUBJECT_FILE, findSubjectDataCallbackHandler);
+        callbackHandlers.put(CallbackType.FIND_SUBJECT_PHOTO, findSubjectDataCallbackHandler);
     }
 
 

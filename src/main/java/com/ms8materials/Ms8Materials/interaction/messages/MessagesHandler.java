@@ -5,7 +5,7 @@ import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Handler;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.messages.handlers.FindSubjectFilesMessageHandler;
+import com.ms8materials.Ms8Materials.interaction.messages.handlers.FindSubjectDataMessageHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.GetSubjectMaterialsMessageHandler;
 import com.ms8materials.Ms8Materials.interaction.messages.handlers.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +21,9 @@ import java.util.Map;
 public class MessagesHandler implements Handler {
     private Map<MessageHandlerType, MessageHandler> handlers;
     public MessagesHandler(@Autowired GetSubjectMaterialsMessageHandler getSubjectMaterialsMessageHandler,
-                           @Autowired FindSubjectFilesMessageHandler findSubjectFilesMessageHandler) {
+                           @Autowired FindSubjectDataMessageHandler findSubjectDataMessageHandler) {
         this.handlers = Map.of(
-                MessageHandlerType.FIND_SUBJECT_FILES, findSubjectFilesMessageHandler,
+                MessageHandlerType.FIND_SUBJECT_DATA, findSubjectDataMessageHandler,
                 MessageHandlerType.GET_SUBJECT_MATERIALS, getSubjectMaterialsMessageHandler
         );
     }

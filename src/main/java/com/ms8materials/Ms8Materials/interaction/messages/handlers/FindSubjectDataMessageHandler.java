@@ -3,10 +3,10 @@ package com.ms8materials.Ms8Materials.interaction.messages.handlers;
 import com.ms8materials.Ms8Materials.data.jpa.SubjectDataType;
 import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
 import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsDataService;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndTypeData;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
-import com.ms8materials.Ms8Materials.interaction.data.SubjectIdData;
 import com.ms8materials.Ms8Materials.interaction.messages.MessageHandlerType;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class FindSubjectFilesMessageHandler implements MessageHandler {
+public class FindSubjectDataMessageHandler implements MessageHandler {
     @Autowired
     private SubjectsDataService subjectsDataService;
 
@@ -35,11 +35,11 @@ public class FindSubjectFilesMessageHandler implements MessageHandler {
             pageIndex = Integer.parseInt(messageText.substring(pageMarkPosition + 1)) - 1;
             searchString = messageText.substring(0, pageMarkPosition - 1).strip();
         }
-        SubjectIdData callbackData = (SubjectIdData) payload;
+        SubjectIdAndTypeData subjectIdAndTypeData = (SubjectIdAndTypeData) payload;
         Page<SubjectDataEntity> subjectDataEntityPage = subjectsDataService.findAllByName(
                 searchString,
-                callbackData.getSbId(),
-                SubjectDataType.FILE.name(),
+                subjectIdAndTypeData.getSubId(),
+                SubjectDataType.getByCallbackDataValue(subjectIdAndTypeData.getT()).name(),
                 pageIndex,
                 10
         );
@@ -67,7 +67,8 @@ public class FindSubjectFilesMessageHandler implements MessageHandler {
                         String.format(
                                 MessagesConstants.ANSWERS.SUBJECT_FILES_LIST_ITEM_MARKUP.getValue(),
                                 item.getId(),
-                                item.getName()
+                                item.getName(),
+                                item.getAuthorUsername()
                         )
                 );
             }

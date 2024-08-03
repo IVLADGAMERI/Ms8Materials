@@ -5,6 +5,8 @@ import com.ms8materials.Ms8Materials.data.jpa.entities.SubjectDataEntity;
 import com.ms8materials.Ms8Materials.data.jpa.services.FilesService;
 import com.ms8materials.Ms8Materials.data.jpa.services.SubjectsDataService;
 import com.ms8materials.Ms8Materials.interaction.data.SubjectDataTypeData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndTypeData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdData;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
@@ -38,13 +40,14 @@ public class GetSubjectMaterialsMessageHandler implements MessageHandler {
         Response response = new Response();
         response.setSource(this);
         response.setMessageHandlerType(MessageHandlerType.GET_SUBJECT_MATERIALS);
-        SubjectDataType subjectDataType = SubjectDataType.getByCallbackDataValue(((SubjectDataTypeData) payload).getT());
-        response.setPayload(new SubjectDataTypeData(subjectDataType.getCallbackDataValue()));
+        SubjectIdAndTypeData subjectIdAndTypeData = (SubjectIdAndTypeData) payload;
+        response.setPayload(subjectIdAndTypeData);
         List<Integer> dataIdList = Arrays.stream(
                 messageText.replaceAll(" ", "").split(",")
         ).map(Integer::valueOf).toList();
-        List<SubjectDataEntity> subjectDataEntityList = subjectsDataService.findAllByIdsAndType(
-                dataIdList, subjectDataType.name()
+        List<SubjectDataEntity> subjectDataEntityList = subjectsDataService.findAllByIds(
+                dataIdList, SubjectDataType.getByCallbackDataValue(subjectIdAndTypeData.getT()).name(),
+                subjectIdAndTypeData.getSubId()
         );
         List<String> fileNameList = new ArrayList<>();
         for (SubjectDataEntity item : subjectDataEntityList) {

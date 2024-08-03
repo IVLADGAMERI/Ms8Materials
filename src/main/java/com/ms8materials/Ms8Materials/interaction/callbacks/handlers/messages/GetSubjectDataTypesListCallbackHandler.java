@@ -22,7 +22,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEditingCallbackHandler {
+public class GetSubjectDataTypesListCallbackHandler extends ResponseBasedEditingCallbackHandler {
 
     @Override
     public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) throws JsonProcessingException {
