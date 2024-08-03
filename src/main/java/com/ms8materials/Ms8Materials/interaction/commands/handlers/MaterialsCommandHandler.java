@@ -6,7 +6,7 @@ import com.ms8materials.Ms8Materials.data.jpa.services.SemestersService;
 import com.ms8materials.Ms8Materials.interaction.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
-import com.ms8materials.Ms8Materials.interaction.data.SemesterIdCallbackData;
+import com.ms8materials.Ms8Materials.interaction.data.SemesterIdData;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
@@ -26,7 +26,8 @@ import java.util.List;
 public class MaterialsCommandHandler implements CommandHandler{
     @Autowired
     private SemestersService semestersService;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public Response handle(Update update) {
@@ -42,7 +43,7 @@ public class MaterialsCommandHandler implements CommandHandler{
                         String.valueOf(item.getNumber()),
                         new CallbackData(
                                 CallbackType.GET_SUBJECTS_LIST.getName(),
-                                objectMapper.writeValueAsString(new SemesterIdCallbackData(item.getId())
+                                objectMapper.writeValueAsString(new SemesterIdData(item.getId())
                                 ),
                                 0
                         )

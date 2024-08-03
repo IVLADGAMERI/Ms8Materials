@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms8materials.Ms8Materials.data.jpa.SubjectDataType;
 import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
-import com.ms8materials.Ms8Materials.interaction.data.SemesterIdCallbackData;
-import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndPageNumberAndTypeData;
+import com.ms8materials.Ms8Materials.interaction.data.SemesterIdData;
 import com.ms8materials.Ms8Materials.interaction.data.SubjectIdAndSemesterIdData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectMaterialsData;
 import com.ms8materials.Ms8Materials.interaction.essentials.InlineKeyboardButtonData;
 import com.ms8materials.Ms8Materials.interaction.essentials.KeyboardsFactory;
 import com.ms8materials.Ms8Materials.interaction.essentials.MessagesConstants;
@@ -23,7 +23,6 @@ import java.util.List;
 @Component
 @Slf4j
 public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEditingCallbackHandler {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public EditMessageText editMessage(int messageId, long chatId, Object payload, Response response) throws JsonProcessingException {
@@ -38,12 +37,11 @@ public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEd
                 new InlineKeyboardButtonData(
                         MessagesConstants.INLINE_BUTTONS_TEXT.FILES.getValue(),
                         new CallbackData(
-                                CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
+                                CallbackType.GET_SUBJECT_FILES_LIST_DESCENDING.getName(),
                                 objectMapper.writeValueAsString(
-                                        new SubjectIdAndPageNumberAndTypeData(
-                                                subjectIdAndSemesterIdData.getSubId(),
-                                                0,
-                                                SubjectDataType.FILE.getCallbackDataValue()
+                                        new SubjectMaterialsData(
+                                                subjectIdAndSemesterIdData.getSbId(),
+                                                0
                                         )
                                 ),
                                 messageId
@@ -52,12 +50,11 @@ public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEd
                 new InlineKeyboardButtonData(
                         MessagesConstants.INLINE_BUTTONS_TEXT.PHOTOS.getValue(),
                         new CallbackData(
-                                CallbackType.GET_SUBJECT_MATERIALS_LIST.getName(),
+                                CallbackType.GET_SUBJECT_PHOTOS_LIST_DESCENDING.getName(),
                                 objectMapper.writeValueAsString(
-                                        new SubjectIdAndPageNumberAndTypeData(
-                                                subjectIdAndSemesterIdData.getSubId(),
-                                                0,
-                                                SubjectDataType.PHOTO.getCallbackDataValue()
+                                        new SubjectMaterialsData(
+                                                subjectIdAndSemesterIdData.getSbId(),
+                                                0
                                         )
                                 ),
                                 messageId
@@ -67,8 +64,8 @@ public class GetSubjectMaterialsTypesListCallbackHandler extends ResponseBasedEd
                         MessagesConstants.INLINE_BUTTONS_TEXT.QUIT.getValue(),
                         new CallbackData(
                                 CallbackType.GET_SUBJECTS_LIST.getName(),
-                                objectMapper.writeValueAsString(new SemesterIdCallbackData(
-                                                subjectIdAndSemesterIdData.getSemId()
+                                objectMapper.writeValueAsString(new SemesterIdData(
+                                                subjectIdAndSemesterIdData.getSmId()
                                         )
                                 ),
                                 messageId

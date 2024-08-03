@@ -38,7 +38,7 @@ public class FindSubjectFilesMessageHandler implements MessageHandler {
         SubjectIdData callbackData = (SubjectIdData) payload;
         Page<SubjectDataEntity> subjectDataEntityPage = subjectsDataService.findAllByName(
                 searchString,
-                callbackData.getSubId(),
+                callbackData.getSbId(),
                 SubjectDataType.FILE.name(),
                 pageIndex,
                 10

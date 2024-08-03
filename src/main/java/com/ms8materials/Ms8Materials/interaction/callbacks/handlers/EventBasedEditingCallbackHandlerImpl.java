@@ -8,6 +8,7 @@ import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,11 +16,12 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 
 public class EventBasedEditingCallbackHandlerImpl implements EditingCallbackHandler, ApplicationEventPublisherAware {
     protected ApplicationEventPublisher applicationEventPublisher;
-    protected static final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    protected ObjectMapper objectMapper;
     @Override
     public Response handle(CallbackData callbackData, long chatId) {
         try {
-            if (callbackData.getMI() == 0) {
+            if (callbackData.getMId() == 0) {
                 return new Response(new SendMessage(String.valueOf(chatId), MessagesConstants.ANSWERS.WAIT.getValue()),
                         ResponseType.MESSAGE,
                         this, callbackData, null);
@@ -29,7 +31,7 @@ public class EventBasedEditingCallbackHandlerImpl implements EditingCallbackHand
                 response.setType(ResponseType.EDIT);
                 response.setSource(this);
                 response.setPayload(callbackData);
-                EditMessageText editMessageText = editMessage(callbackData.getMI(), chatId, callbackData, response);
+                EditMessageText editMessageText = editMessage(callbackData.getMId(), chatId, callbackData, response);
                 response.setEditMessageText(editMessageText);
                 return response;
             }

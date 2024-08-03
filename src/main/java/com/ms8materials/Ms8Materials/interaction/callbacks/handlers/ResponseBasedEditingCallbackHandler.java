@@ -6,10 +6,12 @@ import com.ms8materials.Ms8Materials.events.MessageSentEvent;
 import com.ms8materials.Ms8Materials.interaction.Response;
 import com.ms8materials.Ms8Materials.interaction.ResponseType;
 import com.ms8materials.Ms8Materials.interaction.data.CallbackData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
 public class ResponseBasedEditingCallbackHandler implements EditingCallbackHandler{
-    protected static final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    protected ObjectMapper objectMapper;
     @Override
     public Response handle(CallbackData callbackData, long chatId) {
         Response response = new Response();
@@ -17,11 +19,11 @@ public class ResponseBasedEditingCallbackHandler implements EditingCallbackHandl
         response.setPayload(callbackData);
         response.setSource(this);
         try {
-            response.setEditMessageText(editMessage(callbackData.getMI(), chatId, callbackData, response));
+            response.setEditMessageText(editMessage(callbackData.getMId(), chatId, callbackData, response));
         } catch (JsonProcessingException e) {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(chatId);
-            editMessageText.setMessageId(callbackData.getMI());
+            editMessageText.setMessageId(callbackData.getMId());
             editMessageText.setText(e.getMessage());
         }
         return response;

@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class SemesterIdCallbackData {
-    private int semesterId;
+@NoArgsConstructor
+@Data
+public class SubjectMaterialsData {
+    private int id;
+    private int p;
 }

@@ -1,5 +1,8 @@
 package com.ms8materials.Ms8Materials.interaction.callbacks;
 
+import com.ms8materials.Ms8Materials.interaction.data.SemesterIdData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectIdData;
+import com.ms8materials.Ms8Materials.interaction.data.SubjectMaterialsData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,15 +11,18 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor
 public enum CallbackType {
-    GET_SUBJECTS_LIST("SL"),
-    GET_SUBJECT_MATERIALS_LIST("SML"),
-    GET_SUBJECT_NOTES_LIST("SNL"),
-    GET_SUBJECT_MATERIALS_TYPES_LIST("SMTL"),
-    GET_SUBJECT_NOTE("SN"),
-    FIND_SUBJECT_FILE("FSF"),
+    GET_SUBJECTS_LIST("SL", SemesterIdData.class),
+    GET_SUBJECT_FILES_LIST_DESCENDING("SFLD", SubjectMaterialsData.class),
+    GET_SUBJECT_FILES_LIST_ASCENDING("SFLA", SubjectMaterialsData.class),
+    GET_SUBJECT_PHOTOS_LIST_DESCENDING("SPLD", SubjectMaterialsData.class),
+    GET_SUBJECT_PHOTOS_LIST_ASCENDING("SPLA", SubjectMaterialsData.class),
+    GET_SUBJECT_NOTES_LIST("SNL", Object.class),
+    GET_SUBJECT_MATERIALS_TYPES_LIST("SMTL", SubjectIdData.class),
+    GET_SUBJECT_NOTE("SN", Object.class),
+    FIND_SUBJECT_FILE("FSF", SubjectIdData.class),
 
-    GET_SUBJECT_FILE("SF"),
-    GET_SUBJECT_PHOTO("SP");
+    GET_SUBJECT_FILE("SF", SubjectIdData.class),
+    GET_SUBJECT_PHOTO("SP", SubjectIdData.class);
 
     public static CallbackType getByName(String name) {
         for (CallbackType item : CallbackType.values()) {
@@ -26,4 +32,5 @@ public enum CallbackType {
     }
 
     private final String name;
+    private final Class dataClass;
 }

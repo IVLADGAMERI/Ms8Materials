@@ -7,7 +7,7 @@ public class MessagesConstants {
     @Getter
     @AllArgsConstructor
     public enum MAIN_KEYBOARD_BUTTONS {
-        FILES("/\uD83D\uDCDA Материалы"), NOTES("/\uD83D\uDCCB Заметки");
+        FILES("/\uD83D\uDCDA Материалы"), NOTES("/\uD83D\uDCCB Информация");
         private final String value;
     }
     @Getter
@@ -29,7 +29,7 @@ public class MessagesConstants {
                 "Метода АПК /2."),
         MESSAGE_UNRECOGNISED("Сообщение не распознано."),
         SUBJECT_FILES_LIST_HAT("Список файлов\nПредмет: %s\nСтраница: %s из %s\n"),
-        SUBJECT_FILES_LIST_ITEM_MARKUP("%s) %s\n"),
+        SUBJECT_FILES_LIST_ITEM_MARKUP("%s) %s\nЗагрузил: %s\n"),
         SUBJECT_FILES_LIST_FOOTER("Напиши в чат список нужных файлов (например 1, 10, 21).\n" +
                 "Если файл долго не отправляется - просто подожди окончания загрузки.");
         private final String value;
@@ -42,6 +42,8 @@ public class MessagesConstants {
         NEXT_PAGE("Вперед ➡"),
         FILES("\uD83D\uDCBE Файлы"),
         PHOTOS("\uD83D\uDCF7 Фото"),
+        SORT_DIRECTION_DESC("Сортировка: новые"),
+        SORT_DIRECTION_ASC("Сортировка: старые"),
         QUIT("⬅ Выход");
         private final String value;
     }

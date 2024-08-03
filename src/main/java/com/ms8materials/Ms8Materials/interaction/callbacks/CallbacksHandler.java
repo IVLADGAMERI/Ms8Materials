@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -32,15 +33,18 @@ public class CallbacksHandler implements Handler {
                             @Autowired GetSubjectPhotoCallbackHandler getSubjectPhotoCallbackHandler,
                             @Autowired GetSubjectNoteCallbackHandler getSubjectNoteCallbackHandler,
                             @Autowired FindSubjectFileCallbackHandler findSubjectFileCallbackHandler) {
-        this.callbackHandlers = Map.of(
-                CallbackType.GET_SUBJECTS_LIST, getSubjectsListCallbackHandler,
-                CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST, getSubjectMaterialsTypesListCallbackHandler,
-                CallbackType.GET_SUBJECT_NOTES_LIST, getSubjectNotesListCallbackHandler,
-                CallbackType.GET_SUBJECT_MATERIALS_LIST, getSubjectMaterialsListCallbackHandler,
-                CallbackType.GET_SUBJECT_NOTE, getSubjectNoteCallbackHandler,
-                CallbackType.GET_SUBJECT_PHOTO, getSubjectPhotoCallbackHandler,
-                CallbackType.GET_SUBJECT_FILE, getSubjectFileCallbackHandler,
-                CallbackType.FIND_SUBJECT_FILE, findSubjectFileCallbackHandler);
+        this.callbackHandlers = new HashMap<>();
+        callbackHandlers.put(CallbackType.GET_SUBJECTS_LIST, getSubjectsListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_MATERIALS_TYPES_LIST, getSubjectMaterialsTypesListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_NOTES_LIST, getSubjectNotesListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_FILES_LIST_DESCENDING, getSubjectMaterialsListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_FILES_LIST_ASCENDING, getSubjectMaterialsListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTOS_LIST_ASCENDING, getSubjectMaterialsListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTOS_LIST_DESCENDING, getSubjectMaterialsListCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_NOTE, getSubjectNoteCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_PHOTO, getSubjectPhotoCallbackHandler);
+        callbackHandlers.put(CallbackType.GET_SUBJECT_FILE, getSubjectFileCallbackHandler);
+        callbackHandlers.put(CallbackType.FIND_SUBJECT_FILE, findSubjectFileCallbackHandler);
     }
 
 

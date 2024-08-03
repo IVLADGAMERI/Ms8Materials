@@ -25,7 +25,7 @@ public class FindSubjectFileCallbackHandler extends CallbackHandlerImpl {
             response.setSendMessage(
                     new SendMessage(
                             String.valueOf(chatId),
-                            String.format(MessagesConstants.ANSWERS.FIND_SUBJECT_FILES.getValue(), subjectIdData.getSubId())
+                            String.format(MessagesConstants.ANSWERS.FIND_SUBJECT_FILES.getValue(), subjectIdData.getSbId())
                     )
             );
             response.setMessageHandlerType(MessageHandlerType.FIND_SUBJECT_FILES);

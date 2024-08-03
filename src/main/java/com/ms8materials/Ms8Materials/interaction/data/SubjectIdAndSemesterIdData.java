@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectIdAndSemesterIdData {
-    private int subId;
-    private int semId;
+    private int sbId;
+    private int smId;
 }
